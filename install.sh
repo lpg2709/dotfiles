@@ -50,32 +50,71 @@ if [ ! -d "$USER_HOME" ]; then
 	exit 1
 fi
 
-# # ---- neovim
+cp_neovim() {
+printc "NVIM" "i"
 # printc "\nCopy nvim to $USER_HOME/.config ...\n" "i"
 # cp -r ./nvim "$USER_HOME/.config/nvim"
+}
 
-# # ---- tmux
+cp_tmux() {
+printc "TMUX" "i"
 # printc "\nCopy .tmux.conf to $USER_HOME/.tmux.conf ..." "i"
-# printc "\nExecuting curl" "i"
-# # Copy .tmux.conf to $HOME
-# curl -fLo "$USER_HOME/.tmux.conf" https://raw.githubusercontent.com/lpg2709/tmux-conf/master/.tmux.conf -s > /dev/null
-# check_execution "exit"
+# cp -r ./tmux/.tmux.conf "$USER_HOME/.tmux.config"
+}
 
-# # ---- vim
-# printc "\nInstalling vim-plug ..." "i"
-# printc "\nExecuting curl" "i"
-# # Install https://github.com/junegunn/vim-plug
-# curl -fLo "$USER_HOME/.vim/autoload/plug.vim" --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim -s > /dev/null
-# check_execution "exit"
-#
+cp_vim() {
+printc "VIM" "i"
 # printc "\nCopy .vimrc to $USER_HOME/.vimrc ..." "i"
-# printc "\nExecuting curl" "i"
-# # Copy My-vim-config from git to .vimrc
-# curl -fLo "$USER_HOME/.vimrc" https://raw.githubusercontent.com/lpg2709/vim-config/master/.vimrc -s > /dev/null
-# check_execution "exit"
-#
+# cp -r ./vim/.vimrc "$USER_HOME/.vimrc"
+# cp -r ./vim/.vim "$USER_HOME/.vim"
 # printc "\nCreating .vim/undodir\n" "i"
 # mkdir "$USER_HOME/.vim/undodir" -p
+}
+
+cp_alacritty() {
+	printc "alacritty" "i"
+}
+
+_usage(){
+cat <<- EOF
+Usage: install.sh [OPTION]
+
+OPTION:
+  -h, --help       This screen
+      --vim        Install vim config
+      --nvim       Install neovim config
+      --tmux       Install tmux config
+      --alacritty  Install alacritty config
+
+PS: If no option, all is installed
+
+EOF
+}
+
+case $1 in
+        "--vim")
+			cp_vim
+			;;
+        "--nvim")
+			cp_neovim
+			;;
+        "--tmux")
+			cp_tmux
+			;;
+        "--alacritty")
+			cp_alacritty
+			;;
+        "-h")
+			_usage
+			;;
+        "--help")
+			_usage
+			;;
+        *)
+			printc "TODOS" "i"
+			;;
+esac
+
 
 printc "Finished ...\n" "s"
 
