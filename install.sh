@@ -50,8 +50,32 @@ if [ ! -d "$USER_HOME" ]; then
 	exit 1
 fi
 
+# # ---- neovim
 # printc "\nCopy nvim to $USER_HOME/.config ...\n" "i"
 # cp -r ./nvim "$USER_HOME/.config/nvim"
+
+# # ---- tmux
+# printc "\nCopy .tmux.conf to $USER_HOME/.tmux.conf ..." "i"
+# printc "\nExecuting curl" "i"
+# # Copy .tmux.conf to $HOME
+# curl -fLo "$USER_HOME/.tmux.conf" https://raw.githubusercontent.com/lpg2709/tmux-conf/master/.tmux.conf -s > /dev/null
+# check_execution "exit"
+
+# # ---- vim
+# printc "\nInstalling vim-plug ..." "i"
+# printc "\nExecuting curl" "i"
+# # Install https://github.com/junegunn/vim-plug
+# curl -fLo "$USER_HOME/.vim/autoload/plug.vim" --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim -s > /dev/null
+# check_execution "exit"
+#
+# printc "\nCopy .vimrc to $USER_HOME/.vimrc ..." "i"
+# printc "\nExecuting curl" "i"
+# # Copy My-vim-config from git to .vimrc
+# curl -fLo "$USER_HOME/.vimrc" https://raw.githubusercontent.com/lpg2709/vim-config/master/.vimrc -s > /dev/null
+# check_execution "exit"
+#
+# printc "\nCreating .vim/undodir\n" "i"
+# mkdir "$USER_HOME/.vim/undodir" -p
 
 printc "Finished ...\n" "s"
 
