@@ -16,18 +16,14 @@ cd <repository_folder>
 ./install.sh
 ```
 
+> On Windows use cmd to execute install.bat
+
 Require:
 
 - [git](https://git-scm.com/)
 - [nerd fonts](https://www.nerdfonts.com/) (for icons in status bar)
 
 ## neovim
-
-For Windows copy folder `nvim/` to:
-
-```sh
-%LOCALAPPDATA%
-```
 
 Into vim:
 
@@ -73,10 +69,3 @@ CocInstall coc-tsserver coc-pyright coc-json coc-css coc-clangd coc-markdownlint
 Require:
 - [The Silver Searcher](https://github.com/ggreer/the_silver_searcher)
 
-## alacritty
-
-For Windows copy folder `alacritty/` to:
-
-```
-%APPDATA%
-```
