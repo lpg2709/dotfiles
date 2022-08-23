@@ -52,14 +52,14 @@ fi
 
 cp_neovim() {
 printc "NVIM" "i"
-# printc "\nCopy nvim to $USER_HOME/.config ...\n" "i"
-# cp -r ./nvim "$USER_HOME/.config/nvim"
+printc "\nCopy nvim to $USER_HOME/.config ...\n" "i"
+cp -r ./nvim "$USER_HOME/.config/nvim"
 }
 
 cp_tmux() {
 printc "TMUX" "i"
-# printc "\nCopy .tmux.conf to $USER_HOME/.tmux.conf ..." "i"
-# cp -r ./tmux/.tmux.conf "$USER_HOME/.tmux.config"
+printc "\nCopy .tmux.conf to $USER_HOME/.tmux.conf ..." "i"
+cp -r ./tmux/.tmux.conf "$USER_HOME/.tmux.config"
 }
 
 cp_vim() {

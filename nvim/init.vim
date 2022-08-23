@@ -46,6 +46,8 @@ Plug 'jiangmiao/auto-pairs'                          " Insert or delete brackets
                                                      "   parens, quotes in pair.
 Plug 'editorconfig/editorconfig-vim'                 " Editorsconfig plugint
 Plug 'kyazdani42/nvim-tree.lua'                      " File explorer
+Plug 'dhruvasagar/vim-table-mode'                    " Create tables
+
 
 " - Neovim
 Plug 'nvim-lualine/lualine.nvim'
@@ -135,3 +137,6 @@ iabbrev t_html <ESC><F2>i<!DOCTYPE html><CR><html lang="en"><CR><head><CR><TAB>
 let g:notes_directories = ['~/Documents/Notes']
 let g:notes_suffix = '.md'
 
+" --- Table mode config
+let g:table_mode_corner_corner='|'
+let g:table_mode_corner='+'
