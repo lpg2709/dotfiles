@@ -51,28 +51,27 @@ if [ ! -d "$USER_HOME" ]; then
 fi
 
 cp_neovim() {
-printc "NVIM" "i"
-printc "\nCopy nvim to $USER_HOME/.config ...\n" "i"
-cp -r ./nvim "$USER_HOME/.config/nvim"
+	printc "\nCopy nvim to $USER_HOME/.config ...\n" "i"
+	cp -r ./nvim "$USER_HOME/.config/nvim"
 }
 
 cp_tmux() {
-printc "TMUX" "i"
-printc "\nCopy .tmux.conf to $USER_HOME/.tmux.conf ..." "i"
-cp -r ./tmux/.tmux.conf "$USER_HOME/.tmux.config"
+	printc "\nCopy .tmux.conf to $USER_HOME/.tmux.conf ..." "i"
+	cp -r ./tmux/.tmux.conf "$USER_HOME/.tmux.config"
 }
 
 cp_vim() {
 printc "VIM" "i"
-# printc "\nCopy .vimrc to $USER_HOME/.vimrc ..." "i"
-# cp -r ./vim/.vimrc "$USER_HOME/.vimrc"
-# cp -r ./vim/.vim "$USER_HOME/.vim"
-# printc "\nCreating .vim/undodir\n" "i"
-# mkdir "$USER_HOME/.vim/undodir" -p
+	printc "\nCopy .vimrc to $USER_HOME/.vimrc ..." "i"
+	cp -r ./vim/.vimrc "$USER_HOME/.vimrc"
+	cp -r ./vim/.vim "$USER_HOME/.vim"
+	printc "\nCreating .vim/undodir\n" "i"
+	mkdir "$USER_HOME/.vim/undodir" -p
 }
 
 cp_alacritty() {
-	printc "alacritty" "i"
+	printc "Copy alacritty.yml to $USER_HOME/.config ..." "i"
+	cp -r ./alacritty "$USER_HOME/.config/alacritty"
 }
 
 _usage(){
@@ -111,7 +110,10 @@ case $1 in
 			_usage
 			;;
         *)
-			printc "TODOS" "i"
+			cp_vim
+			cp_neovim
+			cp_tmux
+			cp_alacritty
 			;;
 esac
 
