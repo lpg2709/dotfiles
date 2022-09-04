@@ -51,23 +51,22 @@ if [ ! -d "$USER_HOME" ]; then
 fi
 
 cp_neovim() {
-	printc "\nCopy nvim to $USER_HOME/.config ...\n" "i"
+	printc "Copy nvim to $USER_HOME/.config ...\n" "i"
 	cp -r ./nvim "$USER_HOME/.config/nvim"
 	sudo chown -R "$USER_NAME:$USER_NAME" "$USER_HOME/.config/nvim"
 }
 
 cp_tmux() {
-	printc "\nCopy .tmux.conf to $USER_HOME/.tmux.conf ...\n" "i"
+	printc "Copy .tmux.conf to $USER_HOME/.tmux.conf ...\n" "i"
 	cp -r ./tmux/.tmux.conf "$USER_HOME/.tmux.conf"
 	sudo chown "$USER_NAME:$USER_NAME" "$USER_HOME/.tmux.conf"
 }
 
 cp_vim() {
-printc "VIM" "i"
-	printc "\nCopy .vimrc to $USER_HOME/.vimrc ..." "i"
+	printc "Copy .vimrc to $USER_HOME/.vimrc ..." "i"
 	cp -r ./vim/.vimrc "$USER_HOME/.vimrc"
 	cp -r ./vim/.vim "$USER_HOME/.vim"
-	printc "\nCreating .vim/undodir\n" "i"
+	printc "Creating .vim/undodir\n" "i"
 	mkdir "$USER_HOME/.vim/undodir" -p
 	sudo chown  "$USER_NAME:$USER_NAME" "$USER_HOME/.vimrc"
 	sudo chown -R "$USER_NAME:$USER_NAME" "$USER_HOME/.vim"
