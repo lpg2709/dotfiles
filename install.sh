@@ -45,7 +45,7 @@ function check_execution(){
 
 USER_NAME="${SUDO_USER:-$USER}"
 USER_HOME="/home/$USER_NAME"
-BASE_DIR=$(pwd -P)
+BASE_DIR=$(echo "${BASH_SOURCE[0]}")
 echo "BASE: $BASE_DIR"
 if [ ! -d "$USER_HOME" ]; then
 	printc "User not found!\n" "e"
