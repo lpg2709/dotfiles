@@ -45,7 +45,7 @@ function check_execution(){
 
 USER_NAME="${SUDO_USER:-$USER}"
 USER_HOME="/home/$USER_NAME"
-BASE_DIR=$(echo "${BASH_SOURCE}" | sed 's/install.sh/'})
+BASE_DIR=$(echo "${BASH_SOURCE}" | sed 's/install.sh//'})
 echo "BASE: $BASE_DIR"
 if [ ! -d "$USER_HOME" ]; then
 	printc "User not found!\n" "e"
