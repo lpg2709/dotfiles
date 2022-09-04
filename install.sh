@@ -56,7 +56,7 @@ cp_neovim() {
 }
 
 cp_tmux() {
-	printc "\nCopy .tmux.conf to $USER_HOME/.tmux.conf ..." "i"
+	printc "\nCopy .tmux.conf to $USER_HOME/.tmux.conf ...\n" "i"
 	cp -r ./tmux/.tmux.conf "$USER_HOME/.tmux.config"
 }
 
@@ -70,7 +70,7 @@ printc "VIM" "i"
 }
 
 cp_alacritty() {
-	printc "Copy alacritty.yml to $USER_HOME/.config ..." "i"
+	printc "Copy alacritty.yml to $USER_HOME/.config ...\n" "i"
 	cp -r ./alacritty "$USER_HOME/.config/alacritty"
 }
 
