@@ -46,7 +46,7 @@ function check_execution(){
 USER_NAME="${SUDO_USER:-$USER}"
 USER_HOME="/home/$USER_NAME"
 BASE_DIR=$(echo "${BASH_SOURCE[0]}" | sed 's/install.sh//g')
-echo "BASE: $BASE_DIR"
+
 if [ ! -d "$USER_HOME" ]; then
 	printc "User not found!\n" "e"
 	exit 1
@@ -54,20 +54,20 @@ fi
 
 cp_neovim() {
 	printc "Copy nvim to $USER_HOME/.config ...\n" "i"
-	cp -r ./nvim "$USER_HOME/.config/nvim"
+	cp -r "$BASE_DIR/nvim" "$USER_HOME/.config/nvim"
 	sudo chown -R "$USER_NAME:$USER_NAME" "$USER_HOME/.config/nvim"
 }
 
 cp_tmux() {
 	printc "Copy .tmux.conf to $USER_HOME/.tmux.conf ...\n" "i"
-	cp -r ./tmux/.tmux.conf "$USER_HOME/.tmux.conf"
+	cp -r "$BASE_DIR/tmux/.tmux.conf" "$USER_HOME/.tmux.conf"
 	sudo chown "$USER_NAME:$USER_NAME" "$USER_HOME/.tmux.conf"
 }
 
 cp_vim() {
 	printc "Copy .vimrc to $USER_HOME/.vimrc ..." "i"
-	cp -r ./vim/.vimrc "$USER_HOME/.vimrc"
-	cp -r ./vim/.vim "$USER_HOME/.vim"
+	cp -r "$BASE_DIR./vim/.vimrc" "$USER_HOME/.vimrc"
+	cp -r "$BASE_DIR/vim/.vim" "$USER_HOME/.vim"
 	printc "Creating .vim/undodir\n" "i"
 	mkdir "$USER_HOME/.vim/undodir" -p
 	sudo chown  "$USER_NAME:$USER_NAME" "$USER_HOME/.vimrc"
@@ -76,7 +76,7 @@ cp_vim() {
 
 cp_alacritty() {
 	printc "Copy alacritty.yml to $USER_HOME/.config ...\n" "i"
-	cp -r ./alacritty "$USER_HOME/.config/alacritty"
+	cp -r "$BASE_DIR/alacritty" "$USER_HOME/.config/alacritty"
 	sudo chown -R "$USER_NAME:$USER_NAME" "$USER_HOME/.config/alacritty"
 }
 
