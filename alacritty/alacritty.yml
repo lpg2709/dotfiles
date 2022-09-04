@@ -436,6 +436,9 @@ cursor:
 #   - (Linux/BSD) user login shell
 #   - (Windows) powershell
 shell:
+# For linux
+# program: /bin/bash
+# FOr windows
   program: C:\Windows\system32\wsl.exe
   args:
    - -d Ubuntu
