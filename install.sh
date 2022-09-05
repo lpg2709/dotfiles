@@ -54,6 +54,7 @@ fi
 
 cp_neovim() {
 	printc "Copy nvim to $USER_HOME/.config ...\n" "i"
+	mkdir -p "$USER_HOME/.config/nvim"
 	cp -r "$BASE_DIR/nvim" "$USER_HOME/.config/nvim"
 	sudo chown -R "$USER_NAME:$USER_NAME" "$USER_HOME/.config/nvim"
 }
@@ -65,8 +66,9 @@ cp_tmux() {
 }
 
 cp_vim() {
-	printc "Copy .vimrc to $USER_HOME/.vimrc ..." "i"
+	printc "Copy .vimrc to $USER_HOME/.vimrc ...\n" "i"
 	cp -r "$BASE_DIR./vim/.vimrc" "$USER_HOME/.vimrc"
+	mkdir -p "$USER_HOME/.vim"
 	cp -r "$BASE_DIR/vim/.vim" "$USER_HOME/.vim"
 	printc "Creating .vim/undodir\n" "i"
 	mkdir "$USER_HOME/.vim/undodir" -p
@@ -76,6 +78,7 @@ cp_vim() {
 
 cp_alacritty() {
 	printc "Copy alacritty.yml to $USER_HOME/.config ...\n" "i"
+	mkdir -p "$USER_HOME/.config/alacritty"
 	cp -r "$BASE_DIR/alacritty" "$USER_HOME/.config/alacritty"
 	sudo chown -R "$USER_NAME:$USER_NAME" "$USER_HOME/.config/alacritty"
 }
