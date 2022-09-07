@@ -43,9 +43,10 @@ function check_execution(){
 
 }
 
+printc "\nStarting installation...\n" "i"
+USER_HOME=$(eval echo ~${SUDO_USER})
 USER_NAME="${SUDO_USER:-$USER}"
-USER_HOME="/home/$USER_NAME"
-BASE_DIR=$(echo "${BASH_SOURCE[0]}" | sed 's/install.sh//g')
+printc "  Current user home: $USER_HOME\n" "l"
 
 if [ ! -d "$USER_HOME" ]; then
 	printc "User not found!\n" "e"
@@ -70,7 +71,7 @@ cp_vim() {
 	cp -r "$BASE_DIR./vim/.vimrc" "$USER_HOME/.vimrc"
 	cp -r "$BASE_DIR/vim/.vim" "$USER_HOME/.vim"
 	printc "Creating .vim/undodir\n" "i"
-	mkdir -p "$USER_HOME/.vim/undodir" 
+	mkdir -p "$USER_HOME/.vim/undodir"
 	sudo chown  "$USER_NAME:$USER_NAME" "$USER_HOME/.vimrc"
 	sudo chown -R "$USER_NAME:$USER_NAME" "$USER_HOME/.vim"
 }
