@@ -46,6 +46,7 @@ function check_execution(){
 printc "\nStarting installation...\n" "i"
 USER_HOME=$(eval echo ~${SUDO_USER})
 USER_NAME="${SUDO_USER:-$USER}"
+BASE_DIR=$(echo "${BASH_SOURCE[0]}" | sed 's/install.sh//g')
 printc "  Current user home: $USER_HOME\n" "l"
 
 if [ ! -d "$USER_HOME" ]; then
