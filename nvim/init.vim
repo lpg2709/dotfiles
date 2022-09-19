@@ -93,6 +93,9 @@ nnoremap <leader>fg <cmd>Telescope live_grep<cr>
 nnoremap <leader>fb <cmd>Telescope buffers<cr>
 nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 
+" --- Set AutoPairsShortcutToggle to leader
+let g:AutoPairsShortcutToggle = '<leader>p'
+
 " move para o buffer da esquerda
 map <silent> <C-h> :wincmd h<CR>
 " move para o buffer da direita

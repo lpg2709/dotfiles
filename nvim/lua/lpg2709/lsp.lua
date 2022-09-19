@@ -1,6 +1,6 @@
 local nvim_lsp = require("lspconfig")
 local cmp = require('cmp')
-local servers = { 'tsserver', 'pyright', 'clangd', 'rls', 'rust_analyzer', 'gopls', 'bashls' }
+local servers = { 'tsserver', 'pyright', 'clangd', 'rls', 'rust_analyzer', 'gopls' }
 
 local on_attach = function(client, bufnr)
   -- Enable completion triggered by <c-x><c-o>
