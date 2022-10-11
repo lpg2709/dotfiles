@@ -1,6 +1,6 @@
 local nvim_lsp = require("lspconfig")
 local cmp = require('cmp')
-local servers = { 'tsserver', 'pyright', 'clangd', 'rls', 'rust_analyzer', 'gopls', 'sumneko_lua' }
+local servers = { 'tsserver', 'pyright', 'clangd', 'rust_analyzer', 'gopls', 'vuels', 'sumneko_lua' }
 
 local on_attach = function(client, bufnr)
   -- Enable completion triggered by <c-x><c-o>
@@ -112,6 +112,22 @@ for _, lsp in ipairs(servers) do
 					enable = false,
 				},
 			},
+			["rust-analyzer"] = {
+				imports = {
+					granularity = {
+						group = "module",
+					},
+					prefix = "self",
+				},
+				cargo = {
+					buildScripts = {
+						enable = true,
+					},
+				},
+				procMacro = {
+					enable = true
+				},
+        	}
 		}
 	}
 end
