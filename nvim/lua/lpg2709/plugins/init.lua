@@ -1,3 +1,4 @@
+require('lpg2709.plugins.plugin')
 require('lpg2709.plugins.lualine')
 require('lpg2709.plugins.lsp')
 require('lpg2709.plugins.telescope')
