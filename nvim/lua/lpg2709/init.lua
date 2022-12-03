@@ -1,5 +1,0 @@
-require('lpg2709.lualine')
-require('lpg2709.lsp')
-require('lpg2709.telescope')
-require('lpg2709.treesitter')
-require('lpg2709.nvim-tree')
