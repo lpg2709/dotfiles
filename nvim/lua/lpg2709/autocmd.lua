@@ -1,5 +1,9 @@
+local augroup = vim.api.nvim_create_augroup
+local lpg2709Group = augroup('lpg2709', {})
+
 -- Remove spaces on the end of line
 vim.api.nvim_create_autocmd({'BufWritePre'}, {
+	group = lpg2709Group,
 	pattern = { '*' },
 	command = [[%s/\s\+$//e]],
 })
