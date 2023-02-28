@@ -1,5 +1,7 @@
 local nvim_lsp = require("lspconfig")
-local servers = { 'tsserver', 'pyright', 'clangd', 'rust_analyzer', 'gopls', 'vuels', 'sumneko_lua', 'zls'}
+local mason = require("mason")
+local mason_lspconfig = require("mason-lspconfig")
+local servers = {"tsserver", "pyright", "clangd", "rust_analyzer", "gopls", "neocmake", "vuels", "lua_ls"}
 
 local on_attach = function(client, bufnr)
   -- Enable completion triggered by <c-x><c-o>
@@ -27,6 +29,13 @@ end
 
 -- Setup lspconfig.
 local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
+
+
+-- Mason config
+mason.setup()
+mason_lspconfig.setup({
+	ensure_installed = servers,
+})
 
 for _, lsp in ipairs(servers) do
 	nvim_lsp[lsp].setup {
