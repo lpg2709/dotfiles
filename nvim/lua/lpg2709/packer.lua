@@ -23,8 +23,7 @@ return require('packer').startup(function(use)
 														        --   parens, quotes in pair.
 	use 'editorconfig/editorconfig-vim'                         -- Editorsconfig plugint
 	use 'dhruvasagar/vim-table-mode'                            -- Create tables
-	use 'xolox/vim-notes'
-	use 'xolox/vim-misc'
+
 	-- - Neovim
 	use 'kyazdani42/nvim-tree.lua'                              -- File explorer
 	use 'nvim-lualine/lualine.nvim'                             -- Better status line
@@ -34,9 +33,10 @@ return require('packer').startup(function(use)
 	use 'nvim-telescope/telescope.nvim'
 	use {'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
 	-- -   LSP support
-	use 'neovim/nvim-lspconfig'
-	use 'williamboman/mason.nvim'
-	use 'williamboman/mason-lspconfig.nvim'
+	use "neovim/nvim-lspconfig"
+	use "williamboman/mason.nvim"
+	use "williamboman/mason-lspconfig.nvim"
+
 	-- -   Autocomplete
 	use 'hrsh7th/nvim-cmp'
 	use 'hrsh7th/cmp-buffer'
