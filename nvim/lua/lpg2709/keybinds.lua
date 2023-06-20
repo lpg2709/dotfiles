@@ -12,7 +12,7 @@ map('n', '<C-h>', '<cmd>:wincmd h<cr>', 'Move to left buffer')
 map('n', '<C-l>', '<cmd>:wincmd l<cr>', 'Move to right buffer')
 map('n', '<C-k>', '<cmd>:wincmd k<cr>', 'Move to top buffer')
 map('n', '<C-j>', '<cmd>:wincmd j<cr>', 'Move to bottom buffer')
-map('n', '<leader>k', '<cmd>:set invrelativenumber<cr>', 'Toggle relative lines')
+map('n', '<leader>n', '<cmd>:set invrelativenumber<cr>', 'Toggle relative lines')
 
 map('n', '<leader>k', function()
 	local value = vim.api.nvim_get_option_value("colorcolumn", {})
