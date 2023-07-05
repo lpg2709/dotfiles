@@ -31,7 +31,11 @@ return require('packer').startup(function(use)
 	use {'nvim-treesitter/nvim-treesitter', run = ':TSUpdate'}  -- treesitter S2
 	use 'nvim-lua/plenary.nvim'
 	use 'nvim-telescope/telescope.nvim'
-	use {'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
+	if vim.loop.os_uname().sysname == "Windows_NT" then         -- If is on windows, compile with CMAKE; Else with make
+		use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build' }
+	else
+		use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
+	end
 	-- -   LSP support
 	use "neovim/nvim-lspconfig"
 	use "williamboman/mason.nvim"
