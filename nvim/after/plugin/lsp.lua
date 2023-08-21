@@ -1,7 +1,16 @@
 local nvim_lsp = require("lspconfig")
 local mason = require("mason")
 local mason_lspconfig = require("mason-lspconfig")
-local servers = {"tsserver", "pyright", "clangd", "rust_analyzer", "gopls", "neocmake", "vuels", "lua_ls"}
+local servers = {
+--	"tsserver",
+--	"pyright",
+--	"clangd",
+--	"rust_analyzer",
+--	"gopls",
+--	"neocmake",
+--	"vuels",
+--	"lua_ls"
+}
 
 local on_attach = function(client, bufnr)
   -- Enable completion triggered by <c-x><c-o>
@@ -83,15 +92,4 @@ for _, lsp in ipairs(servers) do
 		}
 	}
 end
-
--- require("nvim-lsp-installer").setup({
---     automatic_installation = true, -- automatically detect which servers to install (based on which servers are set up via lspconfig)
---     ui = {
---         icons = {
---             server_installed = "✓",
---             server_pending = "➜",
---             server_uninstalled = "✗"
---         }
---     }
--- })
 

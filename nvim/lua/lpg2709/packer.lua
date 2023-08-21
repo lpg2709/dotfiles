@@ -16,14 +16,10 @@ return require('packer').startup(function(use)
 	use 'wbthomason/packer.nvim'
 	-- My plugins here
 	use 'morhetz/gruvbox'                                       -- Grovbox colorscheme S2
-	use 'luochen1990/rainbow'                                   -- showing diff level of
-														        --   parentheses in diff
-														        --   color
 	use 'jiangmiao/auto-pairs'                                  -- Insert or delete brackets
 														        --   parens, quotes in pair.
 	use 'editorconfig/editorconfig-vim'                         -- Editorsconfig plugint
-	use 'dhruvasagar/vim-table-mode'                            -- Create tables
-
+	use 'dhruvasagar/vim-table-mode'                            -- Ident text table
 	-- - Neovim
 	use 'kyazdani42/nvim-tree.lua'                              -- File explorer
 	use 'nvim-lualine/lualine.nvim'                             -- Better status line
@@ -40,7 +36,6 @@ return require('packer').startup(function(use)
 	use "neovim/nvim-lspconfig"
 	use "williamboman/mason.nvim"
 	use "williamboman/mason-lspconfig.nvim"
-
 	-- -   Autocomplete
 	use 'hrsh7th/nvim-cmp'
 	use 'hrsh7th/cmp-buffer'
