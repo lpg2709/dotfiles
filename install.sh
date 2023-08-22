@@ -84,18 +84,24 @@ cp_alacritty() {
 	sudo chown -R "$USER_NAME:$USER_NAME" "$USER_HOME/.config/alacritty"
 }
 
+cp_all() {
+	cp_vim
+	cp_neovim
+	cp_tmux
+	cp_alacritty
+}
+
 _usage(){
 cat <<- EOF
 Usage: install.sh [OPTION]
 
 OPTION:
   -h, --help       This screen
+  -a, --all        Install all configs
       --vim        Install vim config
       --nvim       Install neovim config
       --tmux       Install tmux config
       --alacritty  Install alacritty config
-
-PS: If no option, all is installed
 
 EOF
 }
@@ -119,11 +125,14 @@ case $1 in
         "--help")
 			_usage
 			;;
+		"--all")
+			cp_all
+			;;
+		"-a")
+			cp_all
+			;;
         *)
-			cp_vim
-			cp_neovim
-			cp_tmux
-			cp_alacritty
+			_usage
 			;;
 esac
 
