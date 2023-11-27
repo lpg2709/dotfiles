@@ -14,24 +14,7 @@ local packer_bootstrap = ensure_packer()
 -- Packer plugin Bootstrapping
 return require('packer').startup(function(use)
 	use 'wbthomason/packer.nvim'
-	-- My plugins here
-	use 'morhetz/gruvbox'                                       -- Grovbox colorscheme S2
-	use 'jiangmiao/auto-pairs'                                  -- Insert or delete brackets
-														        --   parens, quotes in pair.
-	use 'editorconfig/editorconfig-vim'                         -- Editorsconfig plugint
-	use 'dhruvasagar/vim-table-mode'                            -- Ident text table
-	-- - Neovim
-	use 'kyazdani42/nvim-tree.lua'                              -- File explorer
-	use 'nvim-lualine/lualine.nvim'                             -- Better status line
-	use 'kyazdani42/nvim-web-devicons'                          -- Pretty icons
-	use {'nvim-treesitter/nvim-treesitter', run = ':TSUpdate'}  -- treesitter S2
-	use 'nvim-lua/plenary.nvim'
-	use 'nvim-telescope/telescope.nvim'
-	if vim.loop.os_uname().sysname == "Windows_NT" then         -- If is on windows, compile with CMAKE; Else with make
-		use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build' }
-	else
-		use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
-	end
+
 	-- -   LSP support
 	use "neovim/nvim-lspconfig"
 	use "williamboman/mason.nvim"
@@ -43,6 +26,7 @@ return require('packer').startup(function(use)
 	use 'saadparwaiz1/cmp_luasnip'
 	use 'hrsh7th/cmp-nvim-lsp'
 	use 'hrsh7th/cmp-cmdline'
+	
 	-- -   Snippets
 	use 'L3MON4D3/LuaSnip'
 
