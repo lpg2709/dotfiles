@@ -7,6 +7,7 @@ rmdir /s /q "%AppData%\alacritty"
 
 echo "-- Uninstall nvim config from %LocalAppData%\nvim"
 rmdir /s /q "%LocalAppData%\nvim"
+rmdir /s /q "%LocalAppData%\nvim-data"
 
 echo "-- Uninstall vifm config from %AppData%\Vifm"
 rmdir /s /q "%AppData%\Vifm"
