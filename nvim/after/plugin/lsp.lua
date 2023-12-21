@@ -8,7 +8,7 @@ local servers = {
 --	"rust_analyzer",
 --	"gopls",
 --	"neocmake",
---	"vuels",
+--	"volar",
 --	"lua_ls"
 }
 

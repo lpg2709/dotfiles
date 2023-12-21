@@ -20,6 +20,7 @@ return require('packer').startup(function(use)
 														        --   parens, quotes in pair.
 	use 'editorconfig/editorconfig-vim'                         -- Editorsconfig plugint
 	use 'dhruvasagar/vim-table-mode'                            -- Ident text table
+	-- use 'posva/vim-vue'                                         -- Better vue heighlight
 	-- - Neovim
 	use 'kyazdani42/nvim-tree.lua'                              -- File explorer
 	use 'nvim-lualine/lualine.nvim'                             -- Better status line
