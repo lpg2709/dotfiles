@@ -2,15 +2,15 @@ local nvim_lsp = require("lspconfig")
 local mason = require("mason")
 local mason_lspconfig = require("mason-lspconfig")
 local servers = {
-	"tsserver",
-	"pyright",
-	"clangd",
-	"rust_analyzer",
-	"gopls",
-	"neocmake",
-	"volar",
-	"zls",
-	--	"lua_ls"
+--	"tsserver",
+--	"pyright",
+--	"clangd",
+--	"rust_analyzer",
+--	"gopls",
+--	"neocmake",
+--	"volar",
+--	"zls",
+--	"lua_ls"
 }
 
 local on_attach = function(client, bufnr)
