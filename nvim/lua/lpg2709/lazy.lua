@@ -33,8 +33,6 @@ local plugins = {
 	{
 		"nvim-telescope/telescope-fzf-native.nvim",
 		build = "make"
-		-- For windows
-		-- build = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build"
 	},
 
 	-- -   LSP support
@@ -53,5 +51,16 @@ local plugins = {
 	-- -   Snippets
 	"L3MON4D3/LuaSnip",
 }
+
+-- if on Windows; find telescope-fzf-native and change the build command
+if vim.loop.os_uname().sysname == "Windows_NT" then
+	for key, value in pairs(plugins) do
+		if(type(value) == "table") then
+			if value[1]:find("fzf") then
+				value["build"] = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build"
+			end
+		end
+	end
+end
 
 require("lazy").setup(plugins, {})
