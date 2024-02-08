@@ -18,3 +18,11 @@ vim.api.nvim_create_autocmd({"BufEnter", "BufWinEnter"}, {
   end
 })
 
+-- .inc file use nasm syntax
+vim.api.nvim_create_autocmd({"BufEnter", "BufWinEnter"}, {
+  pattern = {"*.inc"},
+  callback = function ()
+	vim.opt_local.filetype="nasm"
+  end
+})
+
