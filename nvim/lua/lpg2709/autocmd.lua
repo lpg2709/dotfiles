@@ -25,4 +25,3 @@ vim.api.nvim_create_autocmd({"BufEnter", "BufWinEnter"}, {
 	vim.opt_local.filetype="nasm"
   end
 })
-
