@@ -32,9 +32,15 @@ o.cmdheight=2                 -- Command line height
 o.updatetime=80               -- Change update time
 set.hlsearch=false            --
 set.pastetoggle='<F2>'        -- Paste mode toggle by F2 key
-set.guicursor='i:block'       -- Block cursor always
 set.completeopt={'menu','menuone','noselect'}
 o.lazyredraw = true           -- do not redraw screen while running macros
 
 g.mapleader = ' '             -- Remap leader to SPACEBAR
+
+if vim.loop.os_uname().sysname == "Windows_NT" then -- only for windows gui
+	set.guicursor='i:block'       -- Block cursor always
+	set.guifont='Consolas:h14'
+end
+
+
 
