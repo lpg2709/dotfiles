@@ -1,5 +1,13 @@
 -- File with functions usefull for me
 
+-- Enter to Config folder
+function config()
+	local vimrc_path = vim.fn.stdpath("config")
+	vim.cmd("cd " .. vimrc_path)
+	vim.notify("Enter the '" .. vimrc_path .. "' folder!")
+end
+vim.cmd([[command! Config lua config()]])
+
 function find_jq()
 	vim.fn.system('jq --version')
 	if vim.v.shell_error == 1 then
