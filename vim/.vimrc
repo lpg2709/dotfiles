@@ -34,29 +34,20 @@ call plug#begin('~/.vim/plugged')                    " Start plugin maneger
 
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }  " fzf for vim
 Plug 'junegunn/fzf.vim'
-Plug 'scrooloose/nerdtree'                           " File tree
 Plug 'ryanoasis/vim-devicons'                        " Icons, use NerdFonts
 Plug 'morhetz/gruvbox'                               " Grovbox colorscheme S2
-Plug 'vim-utils/vim-man'                             " man page vim
-Plug 'luochen1990/rainbow'                           " showing diff level of
-                                                     "   parentheses in diff
-                                                     "   color
 Plug 'jiangmiao/auto-pairs'                          " Insert or delete brackets
                                                      "   parens, quotes in pair.
-Plug 'vim-airline/vim-airline'                       " Improved status bar
-Plug 'vim-airline/vim-airline-themes'                " Themes for vim-airline
 Plug 'editorconfig/editorconfig-vim'                 " Editorsconfig plugint
 
 call plug#end()                                      " Fim da chamada
 
 "------------------------------ Theme config ---------------------------------
-" set to 0 if you want to enable it later via :RainbowToggle
-let g:rainbow_active = 1
-" Set gruvbox dark to airline
-let g:airline_theme = 'base16_gruvbox_dark_hard'
-let g:gruvbox_contrast_dark = 'medium'
+" Set theme for status line
+set laststatus=2
 " Set colorscheme to Gruvbox
 colorscheme gruvbox
+let g:gruvbox_contrast_dark = 'medium'
 " bg color
 set background=dark
 " Transparent background
@@ -64,7 +55,7 @@ set background=dark
 
 "------------------------------ Keys remaps ----------------------------------
 " Show file tree
-map <silent> <C-b> :NERDTreeToggle<CR>
+map <silent> <C-b> :Sexplorer<CR>
 
 " move para o buffer da esquerda
 map <silent> <C-h> :wincmd h<CR>
@@ -121,9 +112,6 @@ iabbrev t_html <ESC><F2>i<!DOCTYPE html><CR><html lang="en"><CR><head><CR><TAB>
 iabbrev *{ <ESC><F2>i*{<CR><TAB>margin: 0;<CR><TAB>padding: 0;<CR><TAB>
 	\ box-sizing: border-box;<CR>}<ESC><F2>i
 iabbrev log@ console.log(%);<ESC>F%s<c-o>:call getchar()<CR>
-
-"-------------------------------- NERDTree Configs ---------------------------
-let NERDTreeShowHidden=1
 
 "-------------------------------- FZF Configs --------------------------------
 let g:fzf_preview_window = ['right:50%', 'ctrl-/']
