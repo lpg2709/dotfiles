@@ -19,6 +19,7 @@ local plugins = {
 	"editorconfig/editorconfig-vim",                         -- Editorsconfig plugint
 	"dhruvasagar/vim-table-mode",                            -- Ident text table
 	-- "posva/vim-vue",                                         -- Better vue heighlight
+	"tpope/vim-fugitive"                                     -- A Git wrapper so awesome, it should be illegal
 
 	-- - Neovim
 	"kyazdani42/nvim-tree.lua",                              -- File explorer
