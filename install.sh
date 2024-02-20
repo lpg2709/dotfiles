@@ -57,7 +57,7 @@ fi
 cp_neovim() {
 	printc "Copy nvim to $USER_HOME/.config ...\n" "i"
 	mkdir -p "$USER_HOME/.config"
-	cp -r "$BASE_DIR/nvim" "$USER_HOME/.config/nvim"
+	cp -r "$BASE_DIR/nvim" "$USER_HOME/.config"
 	sudo chown -R "$USER_NAME:$USER_NAME" "$USER_HOME/.config/nvim"
 }
 
