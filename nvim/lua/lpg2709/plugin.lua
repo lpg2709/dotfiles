@@ -8,6 +8,15 @@ function config()
 end
 vim.cmd([[command! Config lua config()]])
 
+-- Enter in Documents folder
+function doc()
+	local doc_path = vim.fn.expand("~/Documents")
+	vim.cmd("cd " .. doc_path)
+	vim.notify("Enter the '" .. doc_path .. "' folder!")
+end
+vim.cmd([[command! Doc lua doc()]])
+
+
 function find_jq()
 	vim.fn.system('jq --version')
 	if vim.v.shell_error == 1 then
