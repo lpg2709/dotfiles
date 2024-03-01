@@ -288,7 +288,7 @@ local plugins = {
 			end, { desc = "Search current cursor word",  silent = true })
 			vim.keymap.set('n', '<leader>fW',
 			function()
-				buildin.grep_string({ search = vim.fn.expand("<cword>") })
+				buildin.grep_string({ search = vim.fn.expand("<cWORD>") })
 			end, { desc = "Search current cursor word until space",  silent = true })
 			vim.keymap.set('n', '<leader>fs',
 			function()
