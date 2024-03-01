@@ -189,6 +189,12 @@ local plugins = {
 			vim.g.table_mode_corner='+'
 		end
 	},
+	{
+		"tpope/vim-fugitive",
+		config = function()
+			vim.keymap.set("n", "<leader>gs", vim.cmd.Git, { desc = "Open git with vim-fugitive" })
+		end,
+	},
 	-- "posva/vim-vue",  -- Better vue heighlight
 	{
 		"kyazdani42/nvim-tree.lua", -- File explorer. TODO: Remove
