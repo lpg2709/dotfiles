@@ -1,7 +1,6 @@
 --/*****************************
 -- * VIM BUILDIN CONDIGURATION *
 -- *****************************/
-
 vim.cmd [[
 	syntax on                                       " Highlight on
 	set noerrorbells                                " No error informations
@@ -336,14 +335,14 @@ local plugins = {
 			local mason = require("mason")
 			local mason_lspconfig = require("mason-lspconfig")
 			local servers = {
-				"tsserver",
-				"pyright",
-				"clangd",
-				"rust_analyzer",
+--				"tsserver",
+--				"pyright",
+--				"clangd",
+--				"rust_analyzer",
 --				"gopls",
-				"neocmake",
-				"volar",
-				"zls",
+--				"neocmake",
+--				"volar",
+--				"zls",
 --				"lua_ls"
 			}
 
