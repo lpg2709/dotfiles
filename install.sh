@@ -56,9 +56,15 @@ fi
 
 cp_neovim() {
 	printc "Copy nvim to $USER_HOME/.config ...\n" "i"
-	mkdir -p "$USER_HOME/.config"
-	cp -r "$BASE_DIR/nvim" "$USER_HOME/.config/nvim"
-	sudo chown -R "$USER_NAME:$USER_NAME" "$USER_HOME/.config/nvim"
+	if [ ! -d "$USER_HOME/.config"]; then
+		mkdir -p "$USER_HOME/.config"
+	fi
+	NVIM_FOLDER="$USER_HOME/.config/nvim"
+	if [ -d "$NVIM_FOLDER"]; then
+		rm -rf "$NVIM_FOLDER"
+	fi
+	cp -r "$BASE_DIR/nvim" "$NVIM_FOLDER"
+	sudo chown -R "$USER_NAME:$USER_NAME" "$NVIM_FOLDER"
 }
 
 cp_tmux() {
