@@ -181,12 +181,21 @@ local plugins = {
 			vim.g.AutoPairsShortcutToggle='' -- Disable auto-pairs toggle
 		end,
 	},
-	"editorconfig/editorconfig-vim",
+	{
+		"editorconfig/editorconfig-vim",
+	},
 	{
 		"dhruvasagar/vim-table-mode",
 		config = function()
 			vim.g.table_mode_corner_corner='|'
 			vim.g.table_mode_corner='+'
+			vim.keymap.set("n", "<leader>tt", vim.cmd.TableModeToggle, { desc = "Toggle table mode" })
+		end
+	},
+	{
+		"mbbill/undotree",
+		config = function()
+			vim.keymap.set("n", "<leader>u", vim.cmd.UndotreeToggle)
 		end
 	},
 	{
