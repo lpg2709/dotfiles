@@ -56,11 +56,11 @@ fi
 
 cp_neovim() {
 	printc "Copy nvim to $USER_HOME/.config ...\n" "i"
-	if [ ! -d "$USER_HOME/.config"]; then
+	if [ ! -d "$USER_HOME/.config" ]; then
 		mkdir -p "$USER_HOME/.config"
 	fi
 	NVIM_FOLDER="$USER_HOME/.config/nvim"
-	if [ -d "$NVIM_FOLDER"]; then
+	if [ -d "$NVIM_FOLDER" ]; then
 		rm -rf "$NVIM_FOLDER"
 	fi
 	cp -r "$BASE_DIR/nvim" "$NVIM_FOLDER"
