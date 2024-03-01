@@ -1,4 +1,5 @@
 local telescope = require('telescope')
+local buildin = require('telescope.builtin')
 local actions = require('telescope.actions')
 
 telescope.setup {
@@ -11,7 +12,7 @@ telescope.setup {
 				['<esc>'] = actions.close,
 				['<C-j>'] = actions.move_selection_next,
 				['<C-k>'] = actions.move_selection_previous
-			}
+			},
 		}
 	},
 	pickers = {
@@ -30,6 +31,24 @@ telescope.setup {
 		}
 	}
 }
+
+vim.keymap.set('n', '<leader>ff', buildin.find_files, { desc = "Find files by name",  silent = true })
+vim.keymap.set('n', '<leader>fb', buildin.buffers, { desc = "Find buffer",  silent = true })
+vim.keymap.set('n', '<leader>fh', buildin.help_tags, { desc = "Find on vim buildin help",  silent = true })
+vim.keymap.set('n', '<leader>fg', buildin.live_grep, { desc = "Live grep",  silent = true })
+vim.keymap.set('n', '<leader>fj', buildin.jumplist, { desc = "Find in jumplist",  silent = true })
+vim.keymap.set('n', '<leader>fw',
+	function()
+		buildin.grep_string({ search = vim.fn.expand("<cword>") })
+	end, { desc = "Search current cursor word",  silent = true })
+vim.keymap.set('n', '<leader>fW',
+	function()
+		buildin.grep_string({ search = vim.fn.expand("<cword>") })
+	end, { desc = "Search current cursor word until space",  silent = true })
+vim.keymap.set('n', '<leader>fs',
+	function()
+		buildin.grep_string({ search = vim.fn.input("Grep > ") })
+	end, { desc = "Search by string",  silent = true })
 
 -- To get fzf loaded and working with telescope, you need to call
 -- load_extension, somewhere after setup function:
