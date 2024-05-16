@@ -159,12 +159,12 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 local plugins = {
-	{
-		"kwakzalver/duckytype.nvim",
-		config = function()
-			require("duckytype").setup()
-		end
-	},
+	--{
+	--	"kwakzalver/duckytype.nvim", -- Pratic key type
+	--	config = function()
+	--		require("duckytype").setup()
+	--	end
+	--},
 	{
 		"morhetz/gruvbox", -- S2
 		lazy = false,
@@ -186,9 +186,7 @@ local plugins = {
 			vim.g.AutoPairsShortcutToggle='' -- Disable auto-pairs toggle
 		end,
 	},
-	{
-		"editorconfig/editorconfig-vim",
-	},
+	{ "editorconfig/editorconfig-vim" },
 	{
 		"dhruvasagar/vim-table-mode",
 		config = function()
@@ -209,7 +207,7 @@ local plugins = {
 			vim.keymap.set("n", "<leader>gs", vim.cmd.Git, { desc = "Open git with vim-fugitive" })
 		end,
 	},
-	"posva/vim-vue",  -- Better vue heighlight
+	--{ "posva/vim-vue" },  -- Better vue heighlight
 	--{
 	--	"nvim-tree/nvim-tree.lua", -- File explorer. TODO: Remove
 	--	dependencies = {
@@ -368,15 +366,15 @@ local plugins = {
 			local mason = require("mason")
 			local mason_lspconfig = require("mason-lspconfig")
 			local servers = {
-				"tsserver",
-				"pyright",
-				"clangd",
-				"rust_analyzer",
-				"gopls",
-				"neocmake",
-				"volar",
-				"zls",
-				"lua_ls"
+--				"tsserver",
+--				"pyright",
+--				"clangd",
+--				"rust_analyzer",
+--				"gopls",
+--				"neocmake",
+--				"volar",
+--				"zls",
+--				"lua_ls"
 			}
 
 			local on_attach = function(client, bufnr)
@@ -477,10 +475,6 @@ local plugins = {
 			})
 		end,
 	},
-	{
-		"~/Documents/home/nvim-snake", dev = true
-	},
-
 }
 
 -- if on Windows; find telescope-fzf-native and change the build command
@@ -493,9 +487,3 @@ if vim.loop.os_uname().sysname == "Windows_NT" then
 		end
 	end
 end
-
-require("lazy").setup(plugins, {
-	dev = {
-		path = "~/Documents/home/"
-	}
-})
