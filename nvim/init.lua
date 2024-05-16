@@ -41,14 +41,14 @@ end
 -- * MY CUSTOM FUNCTION *
 -- **********************/
 -- Enter to Config folder
-function config()
+function Config()
 	local vimrc_path = vim.fn.stdpath("config")
 	vim.cmd("cd " .. vimrc_path)
 	vim.notify("Enter the '" .. vimrc_path .. "' folder!")
 end
-vim.cmd([[command! Config lua config()]])
+vim.cmd([[command! Config lua Config()]])
 
-function find_jq()
+function Find_jq()
 	vim.fn.system('jq --version')
 	if vim.v.shell_error == 1 then
 		vim.notify("ERROR: jq command not found!")
@@ -60,7 +60,7 @@ end
 
 -- Pretty JSON format
 function PrettyJSON()
-	if find_jq() then
+	if Find_jq() then
 		vim.cmd("%!jq .")
 		vim.bo.filetype="json"
 		vim.notify("JSON formated")
@@ -70,7 +70,7 @@ vim.cmd([[command! PrettyJSON lua PrettyJSON()]])
 
 -- Minify JSON format
 function MinifyJSON()
-	if find_jq() then
+	if Find_jq() then
 		vim.cmd("%!jq -c .")
 		vim.notify("JSON formated")
 	end
@@ -117,8 +117,7 @@ end
 
 map('n', '<C-h>', '<cmd>:wincmd h<cr>', 'Move to left buffer')
 map('n', '<C-l>', '<cmd>:wincmd l<cr>', 'Move to right buffer')
-map('n', '<C-k>', '<cmd>:wincmd k<cr>', 'Move to top buffer')
-map('n', '<C-j>', '<cmd>:wincmd j<cr>', 'Move to bottom buffer')
+--map('n', '<leader>b', '<cmd>:Sex<cr>', 'Open file explorer')
 map('n', '<leader>n', '<cmd>:set invrelativenumber<cr>', 'Toggle relative lines')
 
 map('n', '<leader>k', function()
@@ -161,6 +160,12 @@ vim.opt.rtp:prepend(lazypath)
 
 local plugins = {
 	{
+		"kwakzalver/duckytype.nvim",
+		config = function()
+			require("duckytype").setup()
+		end
+	},
+	{
 		"morhetz/gruvbox", -- S2
 		lazy = false,
 		config = function()
@@ -195,7 +200,7 @@ local plugins = {
 	{
 		"mbbill/undotree",
 		config = function()
-			vim.keymap.set("n", "<leader>u", vim.cmd.UndotreeToggle)
+			vim.keymap.set("n", "<leader>u", vim.cmd.UndotreeToggle, { desc = "Toggle undo tree" })
 		end
 	},
 	{
@@ -204,20 +209,32 @@ local plugins = {
 			vim.keymap.set("n", "<leader>gs", vim.cmd.Git, { desc = "Open git with vim-fugitive" })
 		end,
 	},
-	-- "posva/vim-vue",  -- Better vue heighlight
+	"posva/vim-vue",  -- Better vue heighlight
+	--{
+	--	"nvim-tree/nvim-tree.lua", -- File explorer. TODO: Remove
+	--	dependencies = {
+	--		"nvim-tree/nvim-web-devicons",
+	--	},
+	--	config = function()
+	--		require("nvim-tree").setup({
+	--			view = {
+	--				adaptive_size = true,
+	--			}
+	--		})
+	--		vim.keymap.set("n", "<leader>b", require("nvim-tree.api").tree.toggle, { desc = "Toggle file Tree" })
+	--	end,
+	--},
 	{
-		"kyazdani42/nvim-tree.lua", -- File explorer. TODO: Remove
-		dependencies = {
-			"kyazdani42/nvim-web-devicons",
+		'stevearc/oil.nvim',
+		opts = {
+			view_options = {show_hidden = true,},
 		},
+		-- Optional dependencies
+		dependencies = { "nvim-tree/nvim-web-devicons" },
 		config = function()
-			require("nvim-tree").setup({
-				view = {
-					adaptive_size = true,
-				}
-			})
-			vim.keymap.set("n", "<leader>b", require("nvim-tree.api").tree.toggle)
-		end,
+			require("oil").setup({ view_options = {show_hidden = true} })
+			vim.keymap.set("n", "<leader>b", "<CMD>Oil<CR>", { desc = "Open parent directory" })
+		end
 	},
 	{
 		"nvim-lualine/lualine.nvim", -- Better status line
@@ -237,8 +254,8 @@ local plugins = {
 		config = function()
 			require('nvim-treesitter.configs').setup{
 				ensure_installed = {
-					"bash", "c", "cmake", "cpp", "glsl",
-					"lua", "rust", "vim", "vimdoc", "zig"
+					"bash", "c", "cmake", "cpp", "glsl", "go",
+					"lua", "rust", "vim", "vimdoc", "zig", "html", "css", "javascript", "markdown", "markdown_inline"
 				},
 				sync_install = false, -- Enable insall required parsers synchronously
 				highlight = {
@@ -255,6 +272,7 @@ local plugins = {
 				"nvim-telescope/telescope-fzf-native.nvim",
 				build = "make"
 			},
+			"nvim-tree/nvim-web-devicons",
 		},
 		config = function()
 			local telescope = require("telescope")
@@ -296,6 +314,7 @@ local plugins = {
 			vim.keymap.set('n', '<leader>fh', buildin.help_tags, { desc = "Find on vim buildin help",  silent = true })
 			vim.keymap.set('n', '<leader>fg', buildin.live_grep, { desc = "Live grep",  silent = true })
 			vim.keymap.set('n', '<leader>fj', buildin.jumplist, { desc = "Find in jumplist",  silent = true })
+			vim.keymap.set('n', '<leader>fk', buildin.keymaps, { desc = "Find keymaps",  silent = true })
 			vim.keymap.set('n', '<leader>fw',
 			function()
 				buildin.grep_string({ search = vim.fn.expand("<cword>") })
@@ -327,7 +346,6 @@ local plugins = {
 			"saadparwaiz1/cmp_luasnip",
 			"hrsh7th/cmp-nvim-lsp",
 			"hrsh7th/cmp-cmdline",
-			"saadparwaiz1/cmp_luasnip",
 			-- -   Snippets
 			{
 				"L3MON4D3/LuaSnip",
@@ -345,19 +363,20 @@ local plugins = {
 		config = function()
 			local cmp = require('cmp')
 			local lspconfig = require("lspconfig")
+			local ls = require("luasnip")
 			local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
 			local mason = require("mason")
 			local mason_lspconfig = require("mason-lspconfig")
 			local servers = {
---				"tsserver",
---				"pyright",
---				"clangd",
---				"rust_analyzer",
---				"gopls",
---				"neocmake",
---				"volar",
---				"zls",
---				"lua_ls"
+				"tsserver",
+				"pyright",
+				"clangd",
+				"rust_analyzer",
+				"gopls",
+				"neocmake",
+				"volar",
+				"zls",
+				"lua_ls"
 			}
 
 			local on_attach = function(client, bufnr)
@@ -366,22 +385,15 @@ local plugins = {
 
 				-- Mappings.
 				-- See `:help vim.lsp.*` for documentation on any of the below functions
-				local bufopts = { noremap=true, silent=true, buffer=bufnr }
-				vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
-				vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
-				vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
-				vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
-				vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
-				vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, bufopts)
-				vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, bufopts)
-				vim.keymap.set('n', '<space>wl', function()
-					print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-				end, bufopts)
-				vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, bufopts)
-				vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, bufopts)
-				vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action, bufopts)
-				vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
-				-- vim.keymap.set('n', '<space>f', vim.lsp.buf.format, bufopts)
+				local bufopts = function(desc) return { noremap=true, silent=true, buffer=bufnr, desc=desc } end
+				vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts("Go to definition"))
+				vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts("Go to references"))
+				vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts("Go to declaration"))
+				vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts("Go to implementation"))
+				vim.keymap.set('n', 'gT', vim.lsp.buf.type_definition, bufopts("Type definition"))
+				vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts("Show informations under cursor"))
+				vim.keymap.set('n', '<space>cr', vim.lsp.buf.rename, bufopts("Rename all ocorrences, under cursor"))
+				vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action, bufopts("Perform some code action"))
 			end
 
 			-- Mason config
@@ -415,25 +427,38 @@ local plugins = {
 			})
 
 			cmp.setup({
-				snippet = {
-					expand = function(args)
-						require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
-					end,
-				},
-				mapping = cmp.mapping.preset.insert({
-					['<C-b>'] = cmp.mapping.scroll_docs(-4),
-					['<C-f>'] = cmp.mapping.scroll_docs(4),
-					['<C-Space>'] = cmp.mapping.complete(),
-					['<C-e>'] = cmp.mapping.abort(),
-					['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
-				}),
 				sources = cmp.config.sources(
 				{
 					{ name = 'nvim_lsp' },
 					{ name = 'buffer' },
 					{ name = 'path' },
 					{ name = 'luasnip' },
-				})
+				}),
+				mapping = cmp.mapping.preset.insert({
+					["<C-n>"] = cmp.mapping.select_next_item { behavior = cmp.SelectBehavior.Insert },
+					["<C-p>"] = cmp.mapping.select_prev_item { behavior = cmp.SelectBehavior.Insert },
+					["<C-b>"] = cmp.mapping.scroll_docs(-4),
+					["<C-f>"] = cmp.mapping.scroll_docs(4),
+					["<C-Space>"] = cmp.mapping.complete(),
+					["<C-e>"] = cmp.mapping.abort(),
+					["<C-y>"] = cmp.mapping(
+						cmp.mapping.confirm {
+							behavior = cmp.ConfirmBehavior.Insert,
+							select = true,
+						},
+						{ "i", "c" }
+					),
+					["<C-k>"] = cmp.mapping(function()
+					  if ls.expand_or_jumpable() then
+					    ls.expand_or_jump()
+					  end
+					end, { "i", "s" })
+				}),
+				snippet = {
+					expand = function(args)
+						ls.lsp_expand(args.body) -- For `luasnip` users.
+					end,
+				},
 			})
 
 			-- Set configuration for specific filetype.
@@ -451,7 +476,10 @@ local plugins = {
 				}
 			})
 		end,
-	}
+	},
+	{
+		"~/Documents/home/nvim-snake", dev = true
+	},
 
 }
 
@@ -466,4 +494,8 @@ if vim.loop.os_uname().sysname == "Windows_NT" then
 	end
 end
 
-require("lazy").setup(plugins, {})
+require("lazy").setup(plugins, {
+	dev = {
+		path = "~/Documents/home/"
+	}
+})
