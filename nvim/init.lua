@@ -487,3 +487,5 @@ if vim.loop.os_uname().sysname == "Windows_NT" then
 		end
 	end
 end
+
+require("lazy").setup(plugins, {})
