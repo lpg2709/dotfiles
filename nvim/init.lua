@@ -26,7 +26,6 @@ vim.o.incsearch=true              -- Highlight search
 vim.o.cmdheight=2                 -- Command line height
 vim.o.updatetime=80               -- Change update time
 vim.opt.hlsearch=false            --
-vim.opt.pastetoggle='<F2>'        -- Paste mode toggle by F2 key
 vim.opt.completeopt={'menu','menuone','noselect'}
 vim.o.lazyredraw = true           -- do not redraw screen while running macros
 
@@ -114,6 +113,11 @@ vim.api.nvim_create_autocmd({"BufEnter", "BufWinEnter"}, {
 local function map(m, k, v, d)
 	vim.keymap.set(m, k, v, { desc = d,  silent = true })
 end
+
+map('n', '<F2>', function()
+	vim.o.paste = not vim.o.paste
+	print("Paste mode: " .. (vim.o.paste and "ON" or "OFF") )
+end, 'Toggle paste mode')
 
 map('n', '<C-h>', '<cmd>:wincmd h<cr>', 'Move to left buffer')
 map('n', '<C-l>', '<cmd>:wincmd l<cr>', 'Move to right buffer')
