@@ -40,41 +40,37 @@ end
 -- * MY CUSTOM FUNCTION *
 -- **********************/
 -- Enter to Config folder
-function Config()
+vim.api.nvim_create_user_command("Config", function()
 	local vimrc_path = vim.fn.stdpath("config")
 	vim.cmd("cd " .. vimrc_path)
+	vim.cmd("e " .. "./init.lua")
 	vim.notify("Enter the '" .. vimrc_path .. "' folder!")
-end
-vim.cmd([[command! Config lua Config()]])
+end, {})
 
-function Find_jq()
+local function jq_is_installed()
 	vim.fn.system('jq --version')
 	if vim.v.shell_error == 1 then
 		vim.notify("ERROR: jq command not found!")
 		return false
 	end
-
 	return true
 end
-
 -- Pretty JSON format
-function PrettyJSON()
-	if Find_jq() then
+vim.api.nvim_create_user_command("PrettyJSON", function()
+	if jq_is_installed() then
 		vim.cmd("%!jq .")
 		vim.bo.filetype="json"
 		vim.notify("JSON formated")
 	end
-end
-vim.cmd([[command! PrettyJSON lua PrettyJSON()]])
+end, {})
 
 -- Minify JSON format
-function MinifyJSON()
-	if Find_jq() then
+vim.api.nvim_create_user_command("MinifyJSON", function()
+	if jq_is_installed() then
 		vim.cmd("%!jq -c .")
 		vim.notify("JSON formated")
 	end
-end
-vim.cmd([[command! MinifyJSON lua MinifyJSON()]])
+end, {})
 
 --/****************
 -- * AUTO COMMAND *
