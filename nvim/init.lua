@@ -1,12 +1,7 @@
 --/*****************************
 -- * VIM BUILDIN CONDIGURATION *
 -- *****************************/
-vim.cmd [[
-	syntax on                                       " Highlight on
-	set noerrorbells                                " No error informations
-	highlight ColorColumn ctermbg=0 guibg=lightgrey " Set color of right column
-]]
-
+vim.cmd('syntax on')              -- Highlight on
 vim.o.exrc=true                   -- Auto load project configs
 vim.o.tabstop=4                   -- 1 tab = 4 Spaces
 vim.o.shiftwidth=4                -- 1 tab = 4 Space for << >>
@@ -28,7 +23,10 @@ vim.o.updatetime=80               -- Change update time
 vim.opt.hlsearch=false            --
 vim.opt.completeopt={'menu','menuone','noselect'}
 vim.o.lazyredraw = true           -- do not redraw screen while running macros
-
+vim.g.noerrorbells = true         -- No error information
+vim.api.nvim_set_hl(0, "ColorColumn", {  -- Set color of right column
+	ctermbg = 0, bg = "lightgrey"
+})
 vim.g.mapleader = ' '             -- Remap leader to SPACEBAR
 
 if vim.loop.os_uname().sysname == "Windows_NT" then -- only for windows gui
@@ -117,12 +115,11 @@ end, 'Toggle paste mode')
 
 map('n', '<C-h>', '<cmd>:wincmd h<cr>', 'Move to left buffer')
 map('n', '<C-l>', '<cmd>:wincmd l<cr>', 'Move to right buffer')
---map('n', '<leader>b', '<cmd>:Sex<cr>', 'Open file explorer')
 map('n', '<leader>n', '<cmd>:set invrelativenumber<cr>', 'Toggle relative lines')
 
 map('n', '<leader>k', function()
 	local value = vim.api.nvim_get_option_value("colorcolumn", {})
-	vim.api.nvim_set_option_value("colorcolumn", (value == "" and "80" or ""), {})
+	vim.opt.colorcolumn = (value == "" and "80"  or "")
 end, 'Toggle right column in 80 char')
 
 map({ 'n', 's' }, '<leader>*', function ()
@@ -159,12 +156,6 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 local plugins = {
-	--{
-	--	"kwakzalver/duckytype.nvim", -- Pratic key type
-	--	config = function()
-	--		require("duckytype").setup()
-	--	end
-	--},
 	{
 		"morhetz/gruvbox", -- S2
 		lazy = false,
@@ -207,21 +198,6 @@ local plugins = {
 			vim.keymap.set("n", "<leader>gs", vim.cmd.Git, { desc = "Open git with vim-fugitive" })
 		end,
 	},
-	--{ "posva/vim-vue" },  -- Better vue heighlight
-	--{
-	--	"nvim-tree/nvim-tree.lua", -- File explorer. TODO: Remove
-	--	dependencies = {
-	--		"nvim-tree/nvim-web-devicons",
-	--	},
-	--	config = function()
-	--		require("nvim-tree").setup({
-	--			view = {
-	--				adaptive_size = true,
-	--			}
-	--		})
-	--		vim.keymap.set("n", "<leader>b", require("nvim-tree.api").tree.toggle, { desc = "Toggle file Tree" })
-	--	end,
-	--},
 	{
 		'stevearc/oil.nvim',
 		opts = {
