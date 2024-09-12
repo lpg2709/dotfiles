@@ -53,6 +53,7 @@ local function jq_is_installed()
 	end
 	return true
 end
+
 -- Pretty JSON format
 vim.api.nvim_create_user_command("PrettyJSON", function()
 	if jq_is_installed() then
@@ -69,6 +70,45 @@ vim.api.nvim_create_user_command("MinifyJSON", function()
 		vim.notify("JSON formated")
 	end
 end, {})
+
+-- Comment Box function
+local function CommentBox()
+	local line = vim.api.nvim_get_current_line()
+	local cline = vim.api.nvim_win_get_cursor(0)[1]
+	local first_char = vim.api.nvim_get_current_line():match("^%s*"):len()
+	local content = line:sub(first_char + 1, line:len() - 1)
+	local tabs = line:sub(0, first_char)
+	local comment_size = content:len() + 4
+	local newline = '' .. tabs .. ' * ' .. string.upper(content) .. ' *'
+	local stars =  string.rep("*", comment_size)
+	local top_line = tabs .. '/' .. stars
+	local bottom_line = tabs .. ' ' .. stars .. '/'
+	-- Put tow lines for nor overwrite content
+	vim.api.nvim_buf_set_lines(0, cline, cline, false, {'', ''})
+	-- Replace with comment box format
+	vim.api.nvim_buf_set_lines(0, cline-1, cline+2, true, {top_line, newline, bottom_line})
+end
+
+-- For format headers in my text docs
+local function FullLinePadding(char)
+	local line = vim.api.nvim_get_current_line()
+	line = line:gsub("^%s*(.-)%s*$", "%1")
+	local line_number = vim.api.nvim_win_get_cursor(0)[1]
+	local max_size = 80
+	local side_size = math.floor((max_size - line:len()) / 2) - 1
+	local side_str = string.rep(char, side_size)
+	local new_line = side_str .. " " .. line .. " " .. side_str
+	if new_line:len() == 79 then
+		new_line = new_line .. char
+	end
+	vim.api.nvim_buf_set_lines(0, line_number - 1, line_number, true, {new_line})
+end
+
+-- Debug print
+P = function(v)
+	print(vim.inspect(v))
+	return v
+end
 
 --/****************
 -- * AUTO COMMAND *
@@ -122,22 +162,9 @@ map('n', '<leader>k', function()
 	vim.opt.colorcolumn = (value == "" and "80"  or "")
 end, 'Toggle right column in 80 char')
 
-map({ 'n', 's' }, '<leader>*', function ()
-	local line = vim.api.nvim_get_current_line()
-	local cline = vim.api.nvim_win_get_cursor(0)[1]
-	local first_char = vim.api.nvim_get_current_line():match("^%s*"):len()
-	local content = line:sub(first_char + 1, line:len() - 1)
-	local tabs = line:sub(0, first_char)
-	local comment_size = content:len() + 4
-	local newline = '' .. tabs .. ' * ' .. string.upper(content) .. ' *'
-	local stars =  string.rep("*", comment_size)
-	local top_line = tabs .. '/' .. stars
-	local bottom_line = tabs .. ' ' .. stars .. '/'
-	-- Put tow lines for nor overwrite content
-	vim.api.nvim_buf_set_lines(0, cline, cline, false, {'', ''})
-	-- Replace with comment box format
-	vim.api.nvim_buf_set_lines(0, cline-1, cline+2, true, {top_line, newline, bottom_line})
-end, 'Comment box')
+map({ 'n', 's' }, '<leader>*', function() CommentBox()         end, 'Comment box')
+map({ 'n', 's' }, '<leader>=', function() FullLinePadding("=") end, 'Text header formater with =')
+map({ 'n', 's' }, '<leader>-', function() FullLinePadding("-") end, 'Text header formater with -')
 
 --/**********
 -- * PLUGIN *
