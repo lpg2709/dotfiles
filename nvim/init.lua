@@ -76,7 +76,7 @@ local function CommentBox()
 	local line = vim.api.nvim_get_current_line()
 	local cline = vim.api.nvim_win_get_cursor(0)[1]
 	local first_char = vim.api.nvim_get_current_line():match("^%s*"):len()
-	local content = line:sub(first_char + 1, line:len() - 1)
+	local content = line:sub(first_char + 1, vim.fn.strdisplaywidth(line) - 1)
 	local tabs = line:sub(0, first_char)
 	local comment_size = content:len() + 4
 	local newline = '' .. tabs .. ' * ' .. string.upper(content) .. ' *'
@@ -93,12 +93,13 @@ end
 local function FullLinePadding(char)
 	local line = vim.api.nvim_get_current_line()
 	line = line:gsub("^%s*(.-)%s*$", "%1")
+	local line_size = vim.fn.strdisplaywidth(line)
 	local line_number = vim.api.nvim_win_get_cursor(0)[1]
 	local max_size = 80
-	local side_size = math.floor((max_size - line:len()) / 2) - 1
+	local side_size = math.floor((max_size - line_size) / 2) - 1
 	local side_str = string.rep(char, side_size)
 	local new_line = side_str .. " " .. line .. " " .. side_str
-	if new_line:len() == 79 then
+	if vim.fn.strdisplaywidth(new_line) == 79 then
 		new_line = new_line .. char
 	end
 	vim.api.nvim_buf_set_lines(0, line_number - 1, line_number, true, {new_line})
