@@ -296,7 +296,7 @@ local plugins = {
 				},
 				pickers = {
 					find_files = {
-						file_ignore_patterns = { "^node_modules/", "^undo/" },
+						file_ignore_patterns = { "^.git/", "^node_modules/", "^undo/" },
 						hidden = true,
 					}
 				},
