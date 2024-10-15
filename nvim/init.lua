@@ -1,3 +1,12 @@
+local M = {
+	is_windows = vim.loop.os_uname().sysname == "Windows_NT",
+	remove_plugins = true,
+	to_remove = {
+		"neovim/nvim-lspconfig",
+		"nvim-treesitter/nvim-treesitter",
+		"nvim-telescope/telescope-fzf-native.nvim",
+	},
+}
 --/*****************************
 -- * VIM BUILDIN CONDIGURATION *
 -- *****************************/
@@ -29,7 +38,7 @@ vim.api.nvim_set_hl(0, "ColorColumn", {  -- Set color of right column
 })
 vim.g.mapleader = ' '             -- Remap leader to SPACEBAR
 
-if vim.loop.os_uname().sysname == "Windows_NT" then -- only for windows gui
+if M.is_windows then -- only for windows gui
 	vim.opt.guicursor='i:block'       -- Block cursor always
 	vim.opt.guifont='Consolas:h14'
 end
@@ -482,7 +491,19 @@ local plugins = {
 }
 
 -- if on Windows; find telescope-fzf-native and change the build command
-if vim.loop.os_uname().sysname == "Windows_NT" then
+if M.is_windows then
+	-- Remove plugins for windows
+	if M.remove_plugins then
+		for key, value in pairs(plugins) do
+			if(type(value) == "table") then
+				for i, v in pairs(M.to_remove) do
+					if value[1] == v then
+						table.remove(plugins, key)
+					end
+				end
+			end
+		end
+	end
 	for key, value in pairs(plugins) do
 		if(type(value) == "table") then
 			if value[1]:find("fzf") then
