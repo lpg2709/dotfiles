@@ -238,12 +238,12 @@ local plugins = {
 	{
 		'stevearc/oil.nvim',
 		opts = {
-			view_options = {show_hidden = true,},
+			default_file_explorer = true,
 		},
 		-- Optional dependencies
 		dependencies = { "nvim-tree/nvim-web-devicons" },
 		config = function()
-			require("oil").setup({ view_options = {show_hidden = true} })
+			require("oil").setup({ view_options = { show_hidden = true } })
 			vim.keymap.set("n", "<leader>b", "<CMD>Oil<CR>", { desc = "Open parent directory" })
 		end
 	},
