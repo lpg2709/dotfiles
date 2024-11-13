@@ -114,6 +114,19 @@ local function FullLinePadding(char)
 	vim.api.nvim_buf_set_lines(0, line_number - 1, line_number, true, {new_line})
 end
 
+local function add_date(is_todo)
+	local pos = vim.api.nvim_win_get_cursor(0)[2]
+	local line = vim.api.nvim_get_current_line()
+	local date = vim.fn.strftime('%d/%m/%Y')
+	if is_todo then date = '[' .. date .. '] ' end
+	local nline = line:sub(0, pos) .. date .. line:sub(pos + 1)
+	vim.api.nvim_set_current_line(nline)
+end
+
+vim.api.nvim_create_user_command("Date", function()
+	add_date(true)
+end, { desc = "Insert current date on current buffer and cursor position" })
+
 -- Debug print
 P = function(v)
 	print(vim.inspect(v))
