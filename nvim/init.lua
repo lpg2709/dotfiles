@@ -530,4 +530,3 @@ if M.is_windows then
 end
 
 require("lazy").setup(plugins, {})
--- Better status line
