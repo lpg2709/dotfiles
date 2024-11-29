@@ -7,9 +7,7 @@ local M = {
 		"nvim-telescope/telescope-fzf-native.nvim",
 	},
 }
---/*****************************
--- * VIM BUILDIN CONDIGURATION *
--- *****************************/
+-- ============================ VIM CONFIGURATION =============================
 vim.cmd('syntax on')              -- Highlight on
 vim.o.exrc=true                   -- Auto load project configs
 vim.o.tabstop=4                   -- 1 tab = 4 Spaces
@@ -37,15 +35,14 @@ vim.api.nvim_set_hl(0, "ColorColumn", {  -- Set color of right column
 	ctermbg = 0, bg = "lightgrey"
 })
 vim.g.mapleader = ' '             -- Remap leader to SPACEBAR
+vim.g.maplocalleader = ' '
 
 if M.is_windows then -- only for windows gui
 	vim.opt.guicursor='i:block'       -- Block cursor always
 	vim.opt.guifont='Consolas:h14'
 end
 
---/**********************
--- * MY CUSTOM FUNCTION *
--- **********************/
+-- =============================== MY FUNCTIONS ===============================
 -- Enter to Config folder
 vim.api.nvim_create_user_command("Config", function()
 	local vimrc_path = vim.fn.stdpath("config")
@@ -133,9 +130,7 @@ P = function(v)
 	return v
 end
 
---/****************
--- * AUTO COMMAND *
--- ****************/
+-- =============================== AUTO COMMAND ===============================
 local augroup = vim.api.nvim_create_augroup
 local lpg2709Group = augroup('lpg2709', {})
 
@@ -164,9 +159,7 @@ vim.api.nvim_create_autocmd({"BufEnter", "BufWinEnter"}, {
   end
 })
 
---/*********************************
--- * KEYBINDS REMAP FOR VIM NATIVE *
--- *********************************/
+-- ================================= KEYBINDS =================================
 local function map(m, k, v, d)
 	vim.keymap.set(m, k, v, { desc = d,  silent = true })
 end
@@ -189,9 +182,7 @@ map({ 'n', 's' }, '<leader>*', function() CommentBox()         end, 'Comment box
 map({ 'n', 's' }, '<leader>=', function() FullLinePadding("=") end, 'Text header formater with =')
 map({ 'n', 's' }, '<leader>-', function() FullLinePadding("-") end, 'Text header formater with -')
 
---/**********
--- * PLUGIN *
--- **********/
+-- ================================== PLUGIN ==================================
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system({
@@ -206,8 +197,8 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 local plugins = {
-	{
-		"morhetz/gruvbox", -- S2
+	{ -- Gruvbox Theme
+		"morhetz/gruvbox",
 		lazy = false,
 		config = function()
 			-- set gruvbox temcoloe (255 or 16)
@@ -236,32 +227,25 @@ local plugins = {
 			vim.keymap.set("n", "<leader>tt", vim.cmd.TableModeToggle, { desc = "Toggle table mode" })
 		end
 	},
-	{
-		"mbbill/undotree",
-		config = function()
-			vim.keymap.set("n", "<leader>u", vim.cmd.UndotreeToggle, { desc = "Toggle undo tree" })
-		end
-	},
-	{
+	{ -- Git integration S2
 		"tpope/vim-fugitive",
 		config = function()
 			vim.keymap.set("n", "<leader>gs", vim.cmd.Git, { desc = "Open git with vim-fugitive" })
 		end,
 	},
-	{
+	{ -- Folder edit as vim buffer
 		'stevearc/oil.nvim',
 		opts = {
 			default_file_explorer = true,
-		},
-		-- Optional dependencies
-		dependencies = { "nvim-tree/nvim-web-devicons" },
+		},		
+		dependencies = { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
 		config = function()
 			require("oil").setup({ view_options = { show_hidden = true } })
 			vim.keymap.set("n", "<leader>b", "<CMD>Oil<CR>", { desc = "Open parent directory" })
 		end
 	},
-	{
-		"nvim-lualine/lualine.nvim", -- Better status line
+	{ -- Better status line
+		"nvim-lualine/lualine.nvim", 
 		config = function()
 			require('lualine').setup {
 				options = {
@@ -271,17 +255,25 @@ local plugins = {
 			}
 		end,
 	},
-	{
-		"nvim-treesitter/nvim-treesitter", -- S2
+	{ -- Treesitter - Highlight, navigate code
+		"nvim-treesitter/nvim-treesitter",
 		build = ":TSUpdate",
-		-- lazy = false,
+		main = 'nvim-treesitter.configs', -- Sets main module to use for opts
+		opts = {
+			ensure_installed = {
+				"bash", "c", "diff", "lua", "markdown", "markdown_inline",
+				"cmake", "cpp", "glsl", "go", "rust", "vim", "vimdoc", "zig",
+				"html", "css", "javascript",
+			},
+			sync_install = true, -- Install parsers synchronously (only applied to `ensure_installed`)
+			auto_install = false, -- Automatically install missing parsers when entering buffer
+			highlight = {
+				enable = true,
+			},
+
+		},
 		config = function()
 			require('nvim-treesitter.configs').setup{
-				ensure_installed = {
-					"bash", "c", "cmake", "cpp", "glsl", "go",
-					"lua", "rust", "vim", "vimdoc", "zig", "html", "css", "javascript", "markdown", "markdown_inline"
-				},
-				sync_install = false, -- Enable insall required parsers synchronously
 				highlight = {
 					enable = true
 				}
@@ -290,13 +282,18 @@ local plugins = {
 	},
 	{
 		"nvim-telescope/telescope.nvim",
+		event = 'VimEnter',
+		branch = '0.1.x',
 		dependencies = {
 			"nvim-lua/plenary.nvim",
 			{
 				"nvim-telescope/telescope-fzf-native.nvim",
-				build = "make"
+				build = "make",
+				cond = function()
+				  return vim.fn.executable 'make' == 1
+				end,
 			},
-			"nvim-tree/nvim-web-devicons",
+			{ 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
 		},
 		config = function()
 			local telescope = require("telescope")
@@ -357,20 +354,10 @@ local plugins = {
 			telescope.load_extension('fzf')
 		end,
 	},
-	{
-		"neovim/nvim-lspconfig",
+	{ -- Autocopletion
+		"hrsh7th/nvim-cmp",
+		event = "insertEnter",
 		dependencies = {
-			-- -   LSP support
-			"williamboman/mason.nvim",
-			"williamboman/mason-lspconfig.nvim",
-			-- -   Autocomplete
-			"hrsh7th/nvim-cmp",
-			"hrsh7th/cmp-buffer",
-			"hrsh7th/cmp-path",
-			"saadparwaiz1/cmp_luasnip",
-			"hrsh7th/cmp-nvim-lsp",
-			"hrsh7th/cmp-cmdline",
-			-- -   Snippets
 			{
 				"L3MON4D3/LuaSnip",
 				lazy = true,
@@ -382,75 +369,23 @@ local plugins = {
 					require("luasnip.loaders.from_vscode").lazy_load()
 				end,
 
-			}
+			},
+			"hrsh7th/cmp-buffer",
+			"hrsh7th/cmp-path",
+			"saadparwaiz1/cmp_luasnip",
+			"hrsh7th/cmp-cmdline",
 		},
-		config = function()
+		config = function ()
 			local cmp = require('cmp')
-			local lspconfig = require("lspconfig")
-			local ls = require("luasnip")
-			local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
-			local mason = require("mason")
-			local mason_lspconfig = require("mason-lspconfig")
-			local servers = {
---				"tsserver",
---				"pyright",
---				"clangd",
---				"rust_analyzer",
---				"gopls",
---				"neocmake",
---				"volar",
---				"zls",
---				"lua_ls"
-			}
-
-			local on_attach = function(client, bufnr)
-				-- Enable completion triggered by <c-x><c-o>
-				vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
-
-				-- Mappings.
-				-- See `:help vim.lsp.*` for documentation on any of the below functions
-				local bufopts = function(desc) return { noremap=true, silent=true, buffer=bufnr, desc=desc } end
-				vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts("Go to definition"))
-				vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts("Go to references"))
-				vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts("Go to declaration"))
-				vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts("Go to implementation"))
-				vim.keymap.set('n', 'gT', vim.lsp.buf.type_definition, bufopts("Type definition"))
-				vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts("Show informations under cursor"))
-				vim.keymap.set('n', '<space>cr', vim.lsp.buf.rename, bufopts("Rename all ocorrences, under cursor"))
-				vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action, bufopts("Perform some code action"))
-			end
-
-			-- Mason config
-			mason.setup()
-			mason_lspconfig.setup({
-				ensure_installed = servers,
-				handlers = {
-					function(server_name)
-						lspconfig[server_name].setup({
-							on_attach = on_attach,
-							capabilities = capabilities,
-							flags = {
-								debounce_text_changes = 150,
-							},
-						})
-					end,
-					["lua_ls"] = function()
-						local lspconfig = require("lspconfig")
-						lspconfig.lua_ls.setup {
-							capabilities = capabilities,
-							settings = {
-								Lua = {
-									diagnostics = {
-										globals = { "vim", "it", "describe", "before_each", "after_each" },
-									}
-								}
-							}
-						}
-					end,
-				}
-			})
-
+			local luasnip = require("luasnip")
+			luasnip.config.setup({})
 			cmp.setup({
+				snippet = {
+					expand = function(args)
+						luasnip.lsp_expand(args.body)
+					end,
+				},
+				completion = { completeopt = 'menu,menuone,noinsert' },
 				sources = cmp.config.sources(
 				{
 					{ name = 'nvim_lsp' },
@@ -473,16 +408,11 @@ local plugins = {
 						{ "i", "c" }
 					),
 					["<C-k>"] = cmp.mapping(function()
-					  if ls.expand_or_jumpable() then
-					    ls.expand_or_jump()
+					  if luasnip.expand_or_jumpable() then
+					    luasnip.expand_or_jump()
 					  end
 					end, { "i", "s" })
 				}),
-				snippet = {
-					expand = function(args)
-						ls.lsp_expand(args.body) -- For `luasnip` users.
-					end,
-				},
 			})
 
 			-- Set configuration for specific filetype.
@@ -499,6 +429,79 @@ local plugins = {
 					{ name = 'buffer' }
 				}
 			})
+
+		end
+
+	},
+	{ -- Main LSP
+		"neovim/nvim-lspconfig",
+		dependencies = {
+			{ "williamboman/mason.nvim", config = true }, -- Simple install LSP server
+			"williamboman/mason-lspconfig.nvim",
+			"hrsh7th/cmp-nvim-lsp", -- Allows extra capabilities provided by nvim-cmp
+		},
+		config = function()
+			local lspconfig = require("lspconfig")
+			local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
+			local mason = require("mason")
+			local mason_lspconfig = require("mason-lspconfig")
+			local servers = {
+--				clangd = {},
+--				neocmake = {},
+--				zls = {},
+--				rust_analyzer = {},
+--				ts_ls = {},
+--				pyright = {},
+--				gopls = {},
+--				volar = {},
+				lua_ls = {
+					settings = {
+						Lua = {
+							completion = {
+								callSnippet = 'Replace',
+							},
+							diagnostics = {
+								globals = { 'vim' },
+							},
+						},
+					},
+				},
+			}
+			local ensure_installed = vim.tbl_keys(servers or {})
+
+			vim.api.nvim_create_autocmd('LspAttach', {
+				group = vim.api.nvim_create_augroup('kickstart-lsp-attach', { clear = true }),
+				callback = function(event)
+					-- Enable completion triggered by <c-x><c-o>
+					vim.api.nvim_buf_set_option(event.buf, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+
+					-- Mappings.
+					-- See `:help vim.lsp.*` for documentation on any of the below functions
+					local bufopts = function(desc) return { noremap=true, silent=true, buffer=event.buf, desc=desc } end
+					vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts("Go to definition"))
+					vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts("Go to references"))
+					vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts("Go to declaration"))
+					vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts("Go to implementation"))
+					vim.keymap.set('n', 'gT', vim.lsp.buf.type_definition, bufopts("Type definition"))
+					vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts("Show informations under cursor"))
+					vim.keymap.set('n', '<space>cr', vim.lsp.buf.rename, bufopts("Rename all ocorrences, under cursor"))
+					vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action, bufopts("Perform some code action"))
+				end
+			})
+
+			-- Mason config
+			mason.setup()
+			mason_lspconfig.setup({
+				ensure_installed = ensure_installed,
+				handlers = {
+					function(server_name)
+						local server = servers[server_name] or {}
+						server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
+						lspconfig[server_name].setup(server)
+					end,
+				}
+			})
+
 		end,
 	},
 }
@@ -527,3 +530,4 @@ if M.is_windows then
 end
 
 require("lazy").setup(plugins, {})
+-- Better status line
