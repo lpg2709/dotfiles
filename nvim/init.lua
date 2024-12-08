@@ -218,7 +218,6 @@ local plugins = {
 			vim.g.AutoPairsShortcutToggle='' -- Disable auto-pairs toggle
 		end,
 	},
-	{ "editorconfig/editorconfig-vim" },
 	{
 		"dhruvasagar/vim-table-mode",
 		config = function()
@@ -237,7 +236,7 @@ local plugins = {
 		'stevearc/oil.nvim',
 		opts = {
 			default_file_explorer = true,
-		},		
+		},
 		dependencies = { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
 		config = function()
 			require("oil").setup({ view_options = { show_hidden = true } })
@@ -245,7 +244,7 @@ local plugins = {
 		end
 	},
 	{ -- Better status line
-		"nvim-lualine/lualine.nvim", 
+		"nvim-lualine/lualine.nvim",
 		config = function()
 			require('lualine').setup {
 				options = {
