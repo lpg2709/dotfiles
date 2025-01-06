@@ -6,6 +6,7 @@ local M = {
 		"nvim-treesitter/nvim-treesitter",
 		"nvim-telescope/telescope-fzf-native.nvim",
 	},
+	jq_installed = vim.fn.executable("jq") == 1,
 }
 -- ============================ VIM CONFIGURATION =============================
 vim.cmd('syntax on')              -- Highlight on
@@ -51,18 +52,9 @@ vim.api.nvim_create_user_command("Config", function()
 	vim.notify("Enter the '" .. vimrc_path .. "' folder!")
 end, {})
 
-local function jq_is_installed()
-	vim.fn.system('jq --version')
-	if vim.v.shell_error == 1 then
-		vim.notify("ERROR: jq command not found!")
-		return false
-	end
-	return true
-end
-
 -- Pretty JSON format
 vim.api.nvim_create_user_command("PrettyJSON", function()
-	if jq_is_installed() then
+	if M.jq_installed then
 		vim.cmd("%!jq .")
 		vim.bo.filetype="json"
 		vim.notify("JSON formated")
@@ -71,7 +63,7 @@ end, {})
 
 -- Minify JSON format
 vim.api.nvim_create_user_command("MinifyJSON", function()
-	if jq_is_installed() then
+	if M.jq_installed then
 		vim.cmd("%!jq -c .")
 		vim.notify("JSON formated")
 	end
