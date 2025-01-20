@@ -29,6 +29,9 @@ command! Xs :mks! | :xa                              " Save the session,
 " set colorcolumn=80                                   " Indicative 80 char line
 highlight ColorColumn ctermbg=0 guibg=lightgrey      " Color of 80 char line
 
+packadd! editorconfig
+packadd! termdebug 
+
 "----------------------------- Pluggins Load ---------------------------------
 call plug#begin('~/.vim/plugged')                    " Start plugin maneger
 
@@ -36,9 +39,6 @@ Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }  " fzf for vim
 Plug 'junegunn/fzf.vim'
 Plug 'ryanoasis/vim-devicons'                        " Icons, use NerdFonts
 Plug 'morhetz/gruvbox'                               " Grovbox colorscheme S2
-Plug 'jiangmiao/auto-pairs'                          " Insert or delete brackets
-                                                     "   parens, quotes in pair.
-Plug 'editorconfig/editorconfig-vim'                 " Editorsconfig plugint
 
 call plug#end()                                      " Fim da chamada
 
@@ -97,21 +97,6 @@ function! SetColumns()
 	:execute "set colorcolumn=" . (&colorcolumn == "" ? "80" : "")
 endfunction
 nnoremap <silent> <leader>k :call SetColumns() <CR>
-
-"----------------------------- Abreviations ----------------------------------
-iabbrev t_link <link rel="stylesheet" type="text/css" href="%"><Esc>F%s<c-o>
-	\ :call getchar()<CR>
-iabbrev t_script <script type="text/javascript" src="%"></script><Esc>F%s<c-o>
-	\ :call getchar()<CR>
-iabbrev t_html <ESC><F2>i<!DOCTYPE html><CR><html lang="en"><CR><head><CR><TAB>
-	\ <meta charset="UTF-8"><CR><TAB><meta http-equiv="X-UA-Compatible"
-	\ content="IE=edge"><CR><TAB><meta name="viewport"
-	\ content="width=device-width, initial-scale=1.0"><CR><TAB><title>%</title>
-	\ <CR></head><CR><body><CR><CR><CR></body><CR></html><c-o>6k<c-o>A<ESC>F%s
-	\ <c-o>:call getchar()<CR><ESC><F2>
-iabbrev *{ <ESC><F2>i*{<CR><TAB>margin: 0;<CR><TAB>padding: 0;<CR><TAB>
-	\ box-sizing: border-box;<CR>}<ESC><F2>i
-iabbrev log@ console.log(%);<ESC>F%s<c-o>:call getchar()<CR>
 
 "-------------------------------- FZF Configs --------------------------------
 let g:fzf_preview_window = ['right:50%', 'ctrl-/']
