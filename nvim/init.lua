@@ -1,11 +1,5 @@
 local M = {
 	is_windows = vim.loop.os_uname().sysname == "Windows_NT",
-	remove_plugins = true,
-	to_remove = {
-		"neovim/nvim-lspconfig",
-		"nvim-treesitter/nvim-treesitter",
-		"nvim-telescope/telescope-fzf-native.nvim",
-	},
 }
 -- ============================ VIM CONFIGURATION =============================
 vim.cmd('syntax on')              -- Highlight on
@@ -314,7 +308,6 @@ local plugins = {
 			highlight = {
 				enable = true,
 			},
-
 		},
 		config = function()
 			require('nvim-treesitter.configs').setup{
@@ -395,7 +388,9 @@ local plugins = {
 
 			-- To get fzf loaded and working with telescope, you need to call
 			-- load_extension, somewhere after setup function:
-			telescope.load_extension('fzf')
+			if not M.is_windows then
+				telescope.load_extension('fzf')
+			end
 		end,
 	},
 	{ -- Autocopletion
@@ -485,6 +480,7 @@ local plugins = {
 			"hrsh7th/cmp-nvim-lsp", -- Allows extra capabilities provided by nvim-cmp
 		},
 		config = function()
+			if M.is_windows then return end
 			local lspconfig = require("lspconfig")
 			local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
 			local mason = require("mason")
@@ -549,28 +545,5 @@ local plugins = {
 		end,
 	},
 }
-
--- if on Windows; find telescope-fzf-native and change the build command
-if M.is_windows then
-	-- Remove plugins for windows
-	if M.remove_plugins then
-		for key, value in pairs(plugins) do
-			if(type(value) == "table") then
-				for i, v in pairs(M.to_remove) do
-					if value[1] == v then
-						table.remove(plugins, key)
-					end
-				end
-			end
-		end
-	end
-	for key, value in pairs(plugins) do
-		if(type(value) == "table") then
-			if value[1]:find("fzf") then
-				value["build"] = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build"
-			end
-		end
-	end
-end
 
 require("lazy").setup(plugins, {})
