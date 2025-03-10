@@ -6,7 +6,6 @@ local M = {
 		"nvim-treesitter/nvim-treesitter",
 		"nvim-telescope/telescope-fzf-native.nvim",
 	},
-	jq_installed = vim.fn.executable("jq") == 1,
 }
 -- ============================ VIM CONFIGURATION =============================
 vim.cmd('syntax on')              -- Highlight on
@@ -54,19 +53,73 @@ end, {})
 
 -- Pretty JSON format
 vim.api.nvim_create_user_command("PrettyJSON", function()
-	if M.jq_installed then
-		vim.cmd("%!jq .")
-		vim.bo.filetype="json"
-		vim.notify("JSON formated")
-	end
+    local indent = 4
+    local output = ""
+    local level = 0
+    local in_string = false
+
+    local buff_cont = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+    buff_cont = table.concat(buff_cont, "\n")
+
+    for i = 1, #buff_cont do
+        local c = buff_cont:sub(i, i)
+
+        if c == '"' and buff_cont:sub(i-1, i-1) ~= '\\' then
+            in_string = not in_string
+        end
+
+		if c == " " and buff_cont:sub(i + 1, i + 1) == '"' then
+			goto continue
+		end
+
+        if not in_string then
+            if c == '{' or c == '[' then
+                output = output .. c .. "\n" .. string.rep(" ", (level + 1) * indent)
+                level = level + 1
+            elseif c == '}' or c == ']' then
+                level = level - 1
+                output = output .. "\n" .. string.rep(" ", level * indent) .. c
+            elseif c == ',' then
+                output = output .. c .. "\n" .. string.rep(" ", level * indent)
+            elseif c == ':' then
+                output = output .. c .. " "
+            else
+                output = output .. c
+            end
+        else
+            output = output .. c
+        end
+		::continue::
+    end
+
+    vim.api.nvim_buf_set_lines(0, 0, -1, false, vim.split(output, "\n"))
+    vim.bo.filetype="json"
+    vim.notify("JSON formated")
 end, {})
 
 -- Minify JSON format
 vim.api.nvim_create_user_command("MinifyJSON", function()
-	if M.jq_installed then
-		vim.cmd("%!jq -c .")
-		vim.notify("JSON formated")
-	end
+    local output = ""
+    local in_string = false
+
+    local buff_cont = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+    buff_cont = table.concat(buff_cont, "\n")
+
+    for i = 1, #buff_cont do
+        local char = buff_cont:sub(i, i)
+
+        if char == '"' and buff_cont:sub(i-1, i-1) ~= '\\' then
+            in_string = not in_string
+        end
+
+        if in_string or not char:match('%s') then
+            output = output .. char
+        end
+    end
+
+    vim.api.nvim_buf_set_lines(0, 0, -1, false, vim.split(output, "\n"))
+    vim.bo.filetype="json"
+    vim.notify("JSON minified")
 end, {})
 
 -- Comment Box function
