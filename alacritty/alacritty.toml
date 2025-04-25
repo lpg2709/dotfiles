@@ -30,7 +30,7 @@ shape = "Block"
 TERM = "alacritty"
 
 [font]
-size = 20.0
+size = 16.0
 
 [font.normal]
 family = "TerminessTTF Nerd Font Mono"
@@ -39,13 +39,15 @@ family = "TerminessTTF Nerd Font Mono"
 [scrolling]
 history = 10000
 
-[shell]
+[terminal.shell]
 # For linux
 # program: /bin/bash
 # For windows
-args = ["-d Ubuntu-20.04", "--cd ~"]
+args = ["-d Debian", "--cd ~"]
 program = 'C:\Windows\system32\wsl.exe'
 
 [window]
 decorations = "full"
 startup_mode = "Maximized"
+
+[terminal]
