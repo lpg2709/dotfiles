@@ -1,6 +1,6 @@
 #!/bin/bash
 
-UNINSTALL=true
+UNINSTALL=false
 VIM=false
 NVIM=false
 TMUX=false
@@ -50,6 +50,28 @@ function check_execution(){
 
 }
 
+_usage(){
+cat <<- EOF
+Usage: install.sh [OPTION]
+
+OPTION:
+  -h, --help       This screen
+  -a, --all        Install all configs
+      --vim        Install vim config
+      --nvim       Install neovim config
+      --tmux       Install tmux config
+      --alacritty  Install alacritty config
+  -u, --uninstall  Uninstall the configurations
+
+EOF
+
+exit 0
+}
+
+if [ "$#" -eq 0 ]; then
+	_usage
+fi
+
 printc "\nStarting ...\n" "i"
 USER_HOME=$(eval echo ~${SUDO_USER})
 USER_NAME="${SUDO_USER:-$USER}"
@@ -62,10 +84,9 @@ if [ ! -d "$USER_HOME" ]; then
 fi
 
 # Check if is root user
-if [[ ! "$(id -u)" -eq "0" ]];then
+if [[ "$(id -u)" -eq "0" ]];then
 	IS_ROOT=true
 fi
-
 
 function remove_configuration() {
 	program="$1"
@@ -75,7 +96,7 @@ function remove_configuration() {
 	for folder in "${folders[@]}"; do
 		if [ -d "$USER_HOME/.config" ]; then
 			printc "  Removing '$folder' ..." "i"
-			# rm -rf "$folder"
+			rm -rf "$folder"
 			printc " OK\n" "i"
 		fi
 	done
@@ -97,7 +118,10 @@ function copy_config() {
 	for (( i = 0; i < "${#array[@]}" ; i += 2 )); do
 		src="${array[i]}"
 		dst="${array[i + 1]}"
-		cp -r "$src" "$dst"
+		printc "  ---> $dst\n" "i"
+		if [ ! -d "$dst" ]; then
+			cp -r "$src" "$dst"
+		fi
 		if [ "$IS_ROOT" = true ]; then
 			sudo chown -R "$USER_NAME:$USER_NAME" "$dst"
 		fi
@@ -105,91 +129,67 @@ function copy_config() {
 
 }
 
-cp_neovim() {
-	if [ "$UNINSTALL" = true ]; then
+while [ "$#" -ne 0 ]; do
+	case "$1" in
+			-u)
+				UNINSTALL=true
+				;;
+			--vim)
+				VIM=true
+				;;
+			--nvim)
+				NVIM=true
+				;;
+			--tmux)
+				TMUX=true
+				;;
+			--alacritty)
+				ALACRITTY=true
+				;;
+			-a | --all)
+				VIM=true
+				ALACRITTY=true
+				NVIM=true
+				TMUX=true
+				;;
+			-h | --help) _usage ;;
+			*) _usage ;;
+	esac
+	shift
+done
+
+if [ "$VIM" = true ]; then
+	if [ "$UNINSTALL" = false ]; then
+		copy_config "vim" false "$BASE_DIR./vim/.vimrc" "$USER_HOME/.vimrc" "$BASE_DIR/vim/.vim" "$USER_HOME/.vim"
+	else
+		remove_configuration "vim" "$USER_HOME/.vimrc" "$USER_HOME/.vim"
+	fi
+fi
+
+if [ "$NVIM" = true ]; then
+	if [ "$UNINSTALL" = false ]; then
 		NVIM_FOLDER="$USER_HOME/.config/nvim"
 		copy_config "nvim" true "$BASE_DIR/nvim" "$NVIM_FOLDER"
 	else
 		remove_configuration "nvim" "$USER_HOME/.config/nvim" "$USER_HOME/.local/share/nvim/"
 	fi
-}
+fi
 
-cp_tmux() {
-	if [ "$UNINSTALL" = true ]; then
+if [ "$TMUX" = true ]; then
+	if [ "$UNINSTALL" = false ]; then
 		copy_config "tmux" false "$BASE_DIR/tmux/.tmux.conf" "$USER_HOME/.tmux.conf"
 	else
 		remove_configuration "tmux" "$USER_HOME/.tmux.conf"
 	fi
-}
+fi
 
-cp_vim() {
-	if [ "$UNINSTALL" = true ]; then
-		copy_config "vim" false "$BASE_DIR./vim/.vimrc" "$USER_HOME/.vimrc" "$BASE_DIR/vim/.vim" "$USER_HOME/.vim"
-	else
-		remove_configuration "vim" "$USER_HOME/.vimrc" "$USER_HOME/.vim"
-	fi
-}
-
-cp_alacritty() {
-	if [ "$UNINSTALL" = true ]; then
+if [ "$ALACRITTY" = true ]; then
+	if [ "$UNINSTALL" = false ]; then
 		copy_config "alacritty" true "$BASE_DIR/alacritty" "$USER_HOME/.config/alacritty"
 	else
 		remove_configuration "alacirtty" "$USER_HOME/.config/alacritty"
 	fi
-}
-
-cp_all() {
-	cp_vim
-	cp_neovim
-	cp_tmux
-	cp_alacritty
-}
-
-_usage(){
-cat <<- EOF
-Usage: install.sh [OPTION]
-
-OPTION:
-  -h, --help       This screen
-  -a, --all        Install all configs
-      --vim        Install vim config
-      --nvim       Install neovim config
-      --tmux       Install tmux config
-      --alacritty  Install alacritty config
-
-EOF
-}
-
-case $1 in
-        "--vim")
-			cp_vim
-			;;
-        "--nvim")
-			cp_neovim
-			;;
-        "--tmux")
-			cp_tmux
-			;;
-        "--alacritty")
-			cp_alacritty
-			;;
-        "-h")
-			_usage
-			;;
-        "--help")
-			_usage
-			;;
-		"--all")
-			cp_all
-			;;
-		"-a")
-			cp_all
-			;;
-        *)
-			_usage
-			;;
-esac
-
+fi
 
 printc "Finished ...\n" "s"
 
