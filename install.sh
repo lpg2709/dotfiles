@@ -1,5 +1,12 @@
 #!/bin/bash
 
+UNINSTALL=true
+VIM=false
+NVIM=false
+TMUX=false
+ALACRITTY=false
+IS_ROOT=false
+
 # Print pretty color output
 #  $1: The message to be printed with the color level
 #  $2: The message level
@@ -43,51 +50,92 @@ function check_execution(){
 
 }
 
-printc "\nStarting installation...\n" "i"
+printc "\nStarting ...\n" "i"
 USER_HOME=$(eval echo ~${SUDO_USER})
 USER_NAME="${SUDO_USER:-$USER}"
 BASE_DIR=$(echo "${BASH_SOURCE[0]}" | sed 's/install.sh//g')
-printc "  Current user home: $USER_HOME\n" "l"
+printc "--> Current user home: $USER_HOME\n" "l"
 
 if [ ! -d "$USER_HOME" ]; then
-	printc "User not found!\n" "e"
+	printc "--> User not found!\n" "e"
 	exit 1
 fi
 
+# Check if is root user
+if [[ ! "$(id -u)" -eq "0" ]];then
+	IS_ROOT=true
+fi
+
+
+function remove_configuration() {
+	program="$1"
+	shift
+	folders=("$@")
+	printc "Cleaning '$program' configuration\n" "i"
+	for folder in "${folders[@]}"; do
+		if [ -d "$USER_HOME/.config" ]; then
+			printc "  Removing '$folder' ..." "i"
+			# rm -rf "$folder"
+			printc " OK\n" "i"
+		fi
+	done
+}
+
+function copy_config() {
+	program="$1"
+	config_folder="$2"
+	shift 2
+	array=("$@")
+
+	printc "Copy configuration for '$program' ...\n" "i"
+	if [ "$config_folder" = true ]; then
+		if [ ! -d "$USER_HOME/.config" ]; then
+			mkdir -p "$USER_HOME/.config"
+		fi
+	fi
+
+	for (( i = 0; i < "${#array[@]}" ; i += 2 )); do
+		src="${array[i]}"
+		dst="${array[i + 1]}"
+		cp -r "$src" "$dst"
+		if [ "$IS_ROOT" = true ]; then
+			sudo chown -R "$USER_NAME:$USER_NAME" "$dst"
+		fi
+	done
+
+}
+
 cp_neovim() {
-	printc "Copy nvim to $USER_HOME/.config ...\n" "i"
-	if [ ! -d "$USER_HOME/.config" ]; then
-		mkdir -p "$USER_HOME/.config"
+	if [ "$UNINSTALL" = true ]; then
+		NVIM_FOLDER="$USER_HOME/.config/nvim"
+		copy_config "nvim" true "$BASE_DIR/nvim" "$NVIM_FOLDER"
+	else
+		remove_configuration "nvim" "$USER_HOME/.config/nvim" "$USER_HOME/.local/share/nvim/"
 	fi
-	NVIM_FOLDER="$USER_HOME/.config/nvim"
-	if [ -d "$NVIM_FOLDER" ]; then
-		rm -rf "$NVIM_FOLDER"
-	fi
-	cp -r "$BASE_DIR/nvim" "$NVIM_FOLDER"
-	sudo chown -R "$USER_NAME:$USER_NAME" "$NVIM_FOLDER"
 }
 
 cp_tmux() {
-	printc "Copy .tmux.conf to $USER_HOME/.tmux.conf ...\n" "i"
-	cp -r "$BASE_DIR/tmux/.tmux.conf" "$USER_HOME/.tmux.conf"
-	sudo chown "$USER_NAME:$USER_NAME" "$USER_HOME/.tmux.conf"
+	if [ "$UNINSTALL" = true ]; then
+		copy_config "tmux" false "$BASE_DIR/tmux/.tmux.conf" "$USER_HOME/.tmux.conf"
+	else
+		remove_configuration "tmux" "$USER_HOME/.tmux.conf"
+	fi
 }
 
 cp_vim() {
-	printc "Copy .vimrc to $USER_HOME/.vimrc ...\n" "i"
-	cp -r "$BASE_DIR./vim/.vimrc" "$USER_HOME/.vimrc"
-	cp -r "$BASE_DIR/vim/.vim" "$USER_HOME/.vim"
-	printc "Creating .vim/undodir\n" "i"
-	mkdir -p "$USER_HOME/.vim/undodir"
-	sudo chown  "$USER_NAME:$USER_NAME" "$USER_HOME/.vimrc"
-	sudo chown -R "$USER_NAME:$USER_NAME" "$USER_HOME/.vim"
+	if [ "$UNINSTALL" = true ]; then
+		copy_config "vim" false "$BASE_DIR./vim/.vimrc" "$USER_HOME/.vimrc" "$BASE_DIR/vim/.vim" "$USER_HOME/.vim"
+	else
+		remove_configuration "vim" "$USER_HOME/.vimrc" "$USER_HOME/.vim"
+	fi
 }
 
 cp_alacritty() {
-	printc "Copy alacritty.yml to $USER_HOME/.config ...\n" "i"
-	mkdir -p "$USER_HOME/.config"
-	cp -r "$BASE_DIR/alacritty" "$USER_HOME/.config/alacritty"
-	sudo chown -R "$USER_NAME:$USER_NAME" "$USER_HOME/.config/alacritty"
+	if [ "$UNINSTALL" = true ]; then
+		copy_config "alacritty" true "$BASE_DIR/alacritty" "$USER_HOME/.config/alacritty"
+	else
+		remove_configuration "alacirtty" "$USER_HOME/.config/alacritty"
+	fi
 }
 
 cp_all() {
