@@ -37,13 +37,40 @@ if M.is_windows then -- only for windows gui
 end
 
 -- =============================== MY FUNCTIONS ===============================
--- Enter to Config folder
-vim.api.nvim_create_user_command("Config", function()
-	local vimrc_path = vim.fn.stdpath("config")
-	vim.cmd("cd " .. vimrc_path)
-	vim.cmd("e " .. "./init.lua")
-	vim.notify("Enter the '" .. vimrc_path .. "' folder!")
-end, {})
+-- Create shortcuts commands
+shortcuts = {
+	{ cmd = "Config", stdpath = "config", file = "./init.lua" },
+	{ cmd = "Doc", path = "~/Documents/" },
+}
+
+local create_user_command_fn = function(opt)
+	local cmd = opt.cmd or "NotValid"
+	local path = opt.path
+	local stdpath = opt.stdpath
+	vim.api.nvim_create_user_command(cmd, function()
+		local dir
+		if path then
+			dir = vim.fn.expand(path)
+		elseif stdpath then
+			dir = vim.fn.stdpath(stdpath)
+		else
+			dir = vim.fn.getcwd()
+		end
+		vim.cmd("cd " .. dir)
+		vim.notify("Enter the '" .. dir .. "' folder!")
+		if opt.file then
+			vim.cmd("e " .. opt.file)
+		elseif opt.action then
+			vim.cmd("e .")
+			vim.cmd(opt.action)
+		else
+			vim.cmd("e .")
+		end
+	end, {})
+end
+for _, sc in ipairs(shortcuts) do
+	create_user_command_fn(sc)
+end
 
 -- Pretty JSON format
 vim.api.nvim_create_user_command("PrettyJSON", function()
@@ -51,21 +78,16 @@ vim.api.nvim_create_user_command("PrettyJSON", function()
     local output = ""
     local level = 0
     local in_string = false
-
     local buff_cont = vim.api.nvim_buf_get_lines(0, 0, -1, false)
     buff_cont = table.concat(buff_cont, "\n")
-
     for i = 1, #buff_cont do
         local c = buff_cont:sub(i, i)
-
         if c == '"' and buff_cont:sub(i-1, i-1) ~= '\\' then
             in_string = not in_string
         end
-
 		if c == " " and buff_cont:sub(i + 1, i + 1) == '"' then
 			goto continue
 		end
-
         if not in_string then
             if c == '{' or c == '[' then
                 output = output .. c .. "\n" .. string.rep(" ", (level + 1) * indent)
@@ -85,7 +107,6 @@ vim.api.nvim_create_user_command("PrettyJSON", function()
         end
 		::continue::
     end
-
     vim.api.nvim_buf_set_lines(0, 0, -1, false, vim.split(output, "\n"))
     vim.bo.filetype="json"
     vim.notify("JSON formated")
@@ -182,20 +203,20 @@ vim.api.nvim_create_autocmd({'BufWritePre'}, {
 
 -- Set tab to 2 on vue files
 vim.api.nvim_create_autocmd({"BufEnter", "BufWinEnter"}, {
-  pattern = {"*.vue"},
-  callback = function ()
-	vim.opt_local.tabstop=2
-	vim.opt_local.shiftwidth=2
-	vim.opt_local.expandtab=true
-  end
+	pattern = {"*.vue"},
+	callback = function ()
+		vim.opt_local.tabstop=2
+		vim.opt_local.shiftwidth=2
+		vim.opt_local.expandtab=true
+	end
 })
 
 -- .inc file use nasm syntax
 vim.api.nvim_create_autocmd({"BufEnter", "BufWinEnter"}, {
-  pattern = {"*.inc"},
-  callback = function ()
-	vim.opt_local.filetype="nasm"
-  end
+	pattern = {"*.inc"},
+	callback = function ()
+		vim.opt_local.filetype="nasm"
+	end
 })
 
 -- ================================= KEYBINDS =================================
@@ -224,14 +245,14 @@ map({ 'n', 's' }, '<leader>-', function() FullLinePadding("-") end, 'Text header
 -- ================================== PLUGIN ==================================
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
-  vim.fn.system({
-    "git",
-    "clone",
-    "--filter=blob:none",
-    "https://github.com/folke/lazy.nvim.git",
-    "--branch=stable", -- latest stable release
-    lazypath,
-  })
+	vim.fn.system({
+		"git",
+		"clone",
+		"--filter=blob:none",
+		"https://github.com/folke/lazy.nvim.git",
+		"--branch=stable", -- latest stable release
+		lazypath,
+	})
 end
 vim.opt.rtp:prepend(lazypath)
 
@@ -374,17 +395,24 @@ local plugins = {
 			vim.keymap.set('n', '<leader>fj', buildin.jumplist, { desc = "Find in jumplist",  silent = true })
 			vim.keymap.set('n', '<leader>fk', buildin.keymaps, { desc = "Find keymaps",  silent = true })
 			vim.keymap.set('n', '<leader>fw',
-			function()
-				buildin.grep_string({ search = vim.fn.expand("<cword>") })
-			end, { desc = "Search current cursor word",  silent = true })
+				function()
+					buildin.grep_string({ search = vim.fn.expand("<cword>") })
+				end, { desc = "Search current cursor word",  silent = true })
 			vim.keymap.set('n', '<leader>fW',
-			function()
-				buildin.grep_string({ search = vim.fn.expand("<cWORD>") })
-			end, { desc = "Search current cursor word until space",  silent = true })
+				function()
+					buildin.grep_string({ search = vim.fn.expand("<cWORD>") })
+				end, { desc = "Search current cursor word until space",  silent = true })
 			vim.keymap.set('n', '<leader>fs',
-			function()
-				buildin.grep_string({ search = vim.fn.input("Grep > ") })
-			end, { desc = "Search by string",  silent = true })
+				function()
+					buildin.grep_string({ search = vim.fn.input("Grep > ") })
+				end, { desc = "Search by string",  silent = true })
+
+			vim.keymap.set('n', '<leader>fc',
+				function()
+					buildin.grep_string({ search = vim.fn.input("Grep > ") })
+				end, { desc = "Go to directory in list",  silent = true })
+
+			vim.keymap.set('n', '<leader>fd', ":Telescope fd find_command=fd t=d<CR>", { desc = "Go to directory",  silent = true })
 
 			-- To get fzf loaded and working with telescope, you need to call
 			-- load_extension, somewhere after setup function:
@@ -545,5 +573,4 @@ local plugins = {
 		end,
 	},
 }
-
 require("lazy").setup(plugins, {})
